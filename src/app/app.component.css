@@ -5,13 +5,14 @@
 }
 
 .top {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
+  justify-content: space-around;
 }
 
 .middle {
-  flex: 10 1 auto;
+  flex: 1 1 auto;
 }
 
 .bottom {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
 }
