@@ -16,3 +16,24 @@
 .bottom {
   flex: 0 1 auto;
 }
+
+.navigation {
+  align-items: center;
+
+}
+
+.navigation a {
+  margin: 15px;
+}
+
+.content {
+  flex: 1 1 auto;
+}
+
+router-outlet {
+  height: 100%;
+}
+
+.ion-ios-menu {
+  font-size: 22pt;
+}

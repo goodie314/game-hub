@@ -1,11 +1,17 @@
 <div class="container">
   <div class="row top">
-    <p style="text-align: center;">Top</p>
+    <p>Game Hub</p>
   </div>
   <div class="row middle">
-    <div class="col"><p>Navigation</p></div>
-    <div class="col" style="flex: 10 1 auto">
-      <p>Content</p>
+    <div class="col navigation" *ngIf="menuToggle">
+      <a class="ion-ios-menu" (click)="menuToggle=!menuToggle"></a>
+      <a routerLink="/">Checkers</a>
+    </div>
+    <div class="col navigation" *ngIf="!menuToggle">
+      <a class="ion-ios-menu" (click)="menuToggle=!menuToggle"></a>
+    </div>
+    <div class="content">
+      <router-outlet></router-outlet>
     </div>
   </div>
   <div class="row bottom">
