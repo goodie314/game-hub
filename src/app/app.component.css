@@ -6,7 +6,6 @@
 
 .top {
   flex: 0 1 auto;
-  justify-content: space-around;
 }
 
 .middle {
@@ -18,8 +17,8 @@
 }
 
 .navigation {
-  align-items: center;
-
+  /*justify-content: space-around;*/
+  /*flex: 0 1 auto;*/
 }
 
 .navigation a {
@@ -27,11 +26,15 @@
 }
 
 .content {
-  flex: 1 1 auto;
+  flex: 10 1 auto;
 }
 
 router-outlet {
   height: 100%;
+}
+
+checkers {
+  flex: 1 1 auto;
 }
 
 .ion-ios-menu {
