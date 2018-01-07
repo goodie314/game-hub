@@ -40,7 +40,7 @@ export class CheckersComponent implements OnInit {
   }
 
   draw(): void {
-    this.resizeWidth();
+    this.resize();
     this.ctx.fillStyle = '#ffffff';
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);

@@ -14,7 +14,6 @@ html, body {
 
 .col {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
+  flex-wrap: nowrap;  flex-direction: column;
   border: 3px solid blue;
 }

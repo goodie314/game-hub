@@ -17,8 +17,8 @@
 }
 
 .navigation {
-  /*justify-content: space-around;*/
-  /*flex: 0 1 auto;*/
+  justify-content: space-around;
+  flex: 0 1 auto;
 }
 
 .navigation a {
