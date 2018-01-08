@@ -5,6 +5,7 @@ import {Shade} from "../../util/enums/shade";
 import {CheckersPiece} from "./checkers-piece";
 import {Color} from "../../util/enums/color";
 import {PotentialMove} from "../../util/types/potential-move";
+import {CapturedPieceContainer} from "./captured-piece-container";
 
 export class Board {
   width: number;
@@ -16,6 +17,8 @@ export class Board {
   potentialMoves: PotentialMove[] = [];
   requiredMove = false;
   darkTurn = true;
+  darkPieceContainer: CapturedPieceContainer;
+  lightPieceContainer: CapturedPieceContainer;
 
   constructor(canvasDimensions: Vec2) {
     this.height = canvasDimensions.y - 80;
@@ -29,8 +32,17 @@ export class Board {
     const diffX = canvasDimensions.x - this.width;
     const diffY = canvasDimensions.y - this.height;
     this.topLeft = new Vec2(diffX / 2, diffY / 2);
+    this.setCapturedPieceContainers(this.topLeft, 40, canvasDimensions.x);
     this.setBoardSquares();
     this.setPieces();
+  }
+
+  setCapturedPieceContainers (topLeft: Vec2, spaceBelow: number, width: number) {
+    const centerX = width / 2;
+    const topLocation = new Vec2(centerX, topLeft.y - (spaceBelow / 2));
+    const bottomLocation = new Vec2(centerX, topLeft.y + this.height + (spaceBelow / 2));
+    this.darkPieceContainer = new CapturedPieceContainer(topLocation, spaceBelow, Color.RED, Shade.DARK);
+    this.lightPieceContainer = new CapturedPieceContainer(bottomLocation, spaceBelow, Color.WHITE, Shade.LIGHT);
   }
 
   setBoardSquares () {
@@ -116,6 +128,9 @@ export class Board {
     for (const piece of this.pieces) {
       piece.draw(ctx);
     }
+
+    this.darkPieceContainer.draw(ctx);
+    this.lightPieceContainer.draw(ctx);
   }
 
   handleClick(x: number, y: number) {
@@ -247,6 +262,14 @@ export class Board {
       if (piece.equals(capturedSquare.checkersPiece)) {
         capturedSquare.checkersPiece = null;
         this.pieces.splice(i, 1);
+        switch (piece.shade) {
+          case Shade.LIGHT:
+            this.lightPieceContainer.pieceCaptured();
+            break;
+          case Shade.DARK:
+            this.darkPieceContainer.pieceCaptured();
+            break;
+        }
         return;
       }
     }
