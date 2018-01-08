@@ -145,24 +145,31 @@ export class Board {
         break;
     }
 
-    let potentialMove = this.boardSquares[squareIndex + (multiplier * 7)];
-    let hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 7))];
-    if (this.isMoveValid(potentialMove)) {
-      potentialMove.highlight = true;
-      this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
-    } else if (this.isMoveValid(hopMove) && (potentialMove.checkersPiece.shade !== piece.shade)) {
-      hopMove.highlight = true;
-      this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
-    }
+    for (let i = 0; i < 2; i++) {
+      let potentialMove = this.boardSquares[squareIndex + (multiplier * 7)];
+      let hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 7))];
+      if (this.isMoveValid(potentialMove)) {
+        potentialMove.highlight = true;
+        this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
+      } else if (this.isMoveValid(hopMove) && (potentialMove.checkersPiece.shade !== piece.shade)) {
+        hopMove.highlight = true;
+        this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
+      }
 
-    potentialMove = this.boardSquares[squareIndex + (multiplier * 9)];
-    hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 9))];
-    if (this.isMoveValid(potentialMove)) {
-      potentialMove.highlight = true;
-      this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
-    } else if (this.isMoveValid(hopMove) && (potentialMove.checkersPiece.shade !== piece.shade)) {
-      hopMove.highlight = true;
-      this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
+      potentialMove = this.boardSquares[squareIndex + (multiplier * 9)];
+      hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 9))];
+      if (this.isMoveValid(potentialMove)) {
+        potentialMove.highlight = true;
+        this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
+      } else if (this.isMoveValid(hopMove) && (potentialMove.checkersPiece.shade !== piece.shade)) {
+        hopMove.highlight = true;
+        this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
+      }
+      if (piece.king) {
+        multiplier *= -1;
+      } else {
+        break;
+      }
     }
 
     if (!this.potentialMoves.length) {
