@@ -14,7 +14,7 @@ export class Board {
   darkPieces: CheckersPiece[] = [];
   lightPieces: CheckersPiece[] = [];
   selectedSquare: BoardSquare;
-  potentialMoves: BoardSquare[] = [];
+  potentialMoves: PotentialMove[] = [];
 
   constructor(canvasDimensions: Vec2) {
     this.height = canvasDimensions.y - 80;
@@ -39,7 +39,13 @@ export class Board {
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         const squarePos = new Vec2(x * squareDim + this.topLeft.x, y * squareDim + this.topLeft.y);
-        this.boardSquares.push(new BoardSquare(squarePos, squareDim, squareShade));
+        const square = new BoardSquare(squarePos, squareDim, squareShade);
+        if (y === 0) {
+          square.kingMeDark = true;
+        } else if (y === 7) {
+          square.kingMeLight = true;
+        }
+        this.boardSquares.push(square);
         switch (squareShade) {
           case Shade.LIGHT:
             squareShade = Shade.DARK;
@@ -140,27 +146,79 @@ export class Board {
     }
 
     let potentialMove = this.boardSquares[squareIndex + (multiplier * 7)];
-    if (!potentialMove.checkersPiece && (potentialMove.squareShade === Shade.DARK)) {
+    let hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 7))];
+    if (this.isMoveValid(potentialMove)) {
       potentialMove.highlight = true;
-      this.potentialMoves.push(potentialMove);
-      // this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
+      this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
+    } else if (this.isMoveValid(hopMove) && (potentialMove.checkersPiece.shade !== piece.shade)) {
+      hopMove.highlight = true;
+      this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
     }
 
     potentialMove = this.boardSquares[squareIndex + (multiplier * 9)];
-    if (!potentialMove.checkersPiece && (potentialMove.squareShade === Shade.DARK)) {
+    hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 9))];
+    if (this.isMoveValid(potentialMove)) {
       potentialMove.highlight = true;
-      this.potentialMoves.push(potentialMove);
-      // this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
+      this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
+    } else if (this.isMoveValid(hopMove) && (potentialMove.checkersPiece.shade !== piece.shade)) {
+      hopMove.highlight = true;
+      this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
     }
 
+    if (!this.potentialMoves.length) {
+      this.selectedSquare = null;
+    }
+  }
+
+  isMoveValid (potentialSquare: BoardSquare): boolean {
+    if (potentialSquare) {
+      return (potentialSquare.squareShade === Shade.DARK) && !potentialSquare.checkersPiece;
+    } else {
+      return false;
+    }
   }
 
   movePiece (selectedSquare: BoardSquare) {
-    for (const square of this.potentialMoves) {
-      if (square.equals(selectedSquare)) {
+    for (const move of this.potentialMoves) {
+      if (move.destinationSquare.equals(selectedSquare)) {
+        const piece = move.sourceSquare.checkersPiece;
         this.selectedSquare.checkersPiece.move(selectedSquare);
         selectedSquare.checkersPiece = this.selectedSquare.checkersPiece;
         this.selectedSquare.checkersPiece = null;
+        if (move.capturedSquare) {
+          this.removePiece(move.capturedSquare);
+        }
+        switch (piece.shade) {
+          case Shade.DARK:
+            if (move.destinationSquare.kingMeDark) {
+              piece.king = true;
+            }
+            break;
+          case Shade.LIGHT:
+            if (move.destinationSquare.kingMeLight) {
+              piece.king = true;
+            }
+        }
+      }
+    }
+  }
+
+  removePiece (capturedSquare: BoardSquare) {
+    for (let i = this.darkPieces.length - 1; i > -1; i--) {
+      const piece = this.darkPieces[i];
+      if (piece.equals(capturedSquare.checkersPiece)) {
+        capturedSquare.checkersPiece = null;
+        this.darkPieces.splice(i, 1);
+        return;
+      }
+    }
+
+    for (let i = this.lightPieces.length - 1; i > -1; i--) {
+      const piece = this.lightPieces[i];
+      if (piece.equals(capturedSquare.checkersPiece)) {
+        capturedSquare.checkersPiece = null;
+        this.lightPieces.splice(i, 1);
+        return;
       }
     }
   }
@@ -168,8 +226,8 @@ export class Board {
   unhighlightMoves () {
     this.selectedSquare = null;
 
-    this.potentialMoves.forEach((square) => {
-      square.highlight = false;
+    this.potentialMoves.forEach((move) => {
+      move.destinationSquare.highlight = false;
     });
     this.potentialMoves = [];
   }

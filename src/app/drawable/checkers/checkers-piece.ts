@@ -51,4 +51,8 @@ export class CheckersPiece {
     console.log('to: ', square.middlePos);
     this.pos = square.middlePos;
   }
+
+  equals (piece: CheckersPiece) {
+    return this.pos === piece.pos;
+  }
 }

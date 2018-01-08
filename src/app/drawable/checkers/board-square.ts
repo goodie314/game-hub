@@ -12,6 +12,10 @@ export class BoardSquare {
   squareColor: string;
   highlight: boolean;
   checkersPiece: CheckersPiece;
+  // light shaded pieces can get kinged here
+  kingMeLight: boolean;
+  // dark shaded pieces can get kinged here
+  kingMeDark: boolean;
 
   constructor (topLeftPos: Vec2, squareDim: number, squareShade: Shade) {
     this.topLeftPos = topLeftPos;
