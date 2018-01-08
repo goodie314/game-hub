@@ -11,8 +11,7 @@ export class Board {
   height: number;
   topLeft: Vec2;
   boardSquares: BoardSquare[] = [];
-  darkPieces: CheckersPiece[] = [];
-  lightPieces: CheckersPiece[] = [];
+  pieces: CheckersPiece[] = [];
   selectedSquare: BoardSquare;
   potentialMoves: PotentialMove[] = [];
   requiredMove = false;
@@ -74,7 +73,7 @@ export class Board {
       const square = this.boardSquares[i];
       if (square.squareShade === Shade.DARK) {
         const piece = new CheckersPiece(Color.WHITE, square.middlePos, (square.squareDim / 2) * .75, Shade.LIGHT);
-        this.lightPieces.push(piece);
+        this.pieces.push(piece);
         square.checkersPiece = piece;
       }
     }
@@ -83,24 +82,29 @@ export class Board {
       const square = this.boardSquares[i];
       if (square.squareShade === Shade.DARK) {
         const piece = new CheckersPiece(Color.RED, square.middlePos, (square.squareDim / 2) * .75, Shade.DARK);
-        this.darkPieces.push(piece);
+        this.pieces.push(piece);
         square.checkersPiece = piece;
       }
     }
   }
 
-  resize (width: number, height: number) {
-    this.height = height - 80;
-    if (width < this.height) {
-      this.height = width;
-      this.width = width;
-    } else {
-      this.width = height - 80;
-    }
+  resize (canvasDimensions: Vec2) {
+    const board = new Board(canvasDimensions);
+    board.darkTurn = this.darkTurn;
+    board.restoreSavedState(this.boardSquares);
+    return board;
+  }
 
-    const diffX = width - this.width;
-    const diffY = height - this.height;
-    this.topLeft = new Vec2(diffX / 2, diffY / 2);
+  restoreSavedState(squares: BoardSquare[]) {
+    this.pieces = [];
+    for (let i = 0; i < this.boardSquares.length; i++) {
+      const square = this.boardSquares[i];
+      square.checkersPiece = squares[i].checkersPiece;
+      if (square.checkersPiece) {
+        square.checkersPiece.resize(square.middlePos, (square.squareDim / 2) * .75);
+        this.pieces.push(square.checkersPiece);
+      }
+    }
   }
 
   draw (ctx: CanvasRenderingContext2D) {
@@ -109,23 +113,18 @@ export class Board {
     for (const square of this.boardSquares) {
       square.draw(ctx);
     }
-    for (const piece of this.darkPieces) {
-      piece.draw(ctx);
-    }
-    for (const piece of this.lightPieces) {
+    for (const piece of this.pieces) {
       piece.draw(ctx);
     }
   }
 
   handleClick(x: number, y: number) {
-    console.log(x, y);
     for (let i = 0; i < this.boardSquares.length; i++) {
       const square = this.boardSquares[i];
       if (square.contains(x, y)) {
         if (this.selectedSquare) {
           this.movePiece(square);
         } else if (square.checkersPiece) {
-          console.log('piece: ', square.checkersPiece.shade);
           if (this.validTurn(square.checkersPiece)) {
             this.selectedSquare = square;
             this.highlightMoves(square, i);
@@ -243,20 +242,11 @@ export class Board {
   }
 
   removePiece (capturedSquare: BoardSquare) {
-    for (let i = this.darkPieces.length - 1; i > -1; i--) {
-      const piece = this.darkPieces[i];
+    for (let i = this.pieces.length - 1; i > -1; i--) {
+      const piece = this.pieces[i];
       if (piece.equals(capturedSquare.checkersPiece)) {
         capturedSquare.checkersPiece = null;
-        this.darkPieces.splice(i, 1);
-        return;
-      }
-    }
-
-    for (let i = this.lightPieces.length - 1; i > -1; i--) {
-      const piece = this.lightPieces[i];
-      if (piece.equals(capturedSquare.checkersPiece)) {
-        capturedSquare.checkersPiece = null;
-        this.lightPieces.splice(i, 1);
+        this.pieces.splice(i, 1);
         return;
       }
     }

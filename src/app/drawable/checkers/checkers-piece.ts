@@ -18,17 +18,28 @@ export class CheckersPiece {
     this.king = false;
   }
 
+  resize (position: Vec2, radius: number) {
+    this.pos = position;
+    this.radius = radius;
+  }
+
   draw (ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
+    // avoid crashing on resizing to negative numbers
+    if (this.radius > 0) {
+      ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
+    }
     ctx.stroke();
     ctx.fill();
     ctx.closePath();
 
     ctx.strokeStyle = '#000000';
     ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.radius * .75, 0, 2 * Math.PI);
+    // avoid crashing on resizing to negative numbers
+    if (this.radius * .75 > 0) {
+      ctx.arc(this.pos.x, this.pos.y, this.radius * .75, 0, 2 * Math.PI);
+    }
     ctx.stroke();
     ctx.closePath();
 
@@ -47,8 +58,6 @@ export class CheckersPiece {
   }
 
   move (square: BoardSquare): void {
-    console.log('move from: ', this.pos);
-    console.log('to: ', square.middlePos);
     this.pos = square.middlePos;
   }
 

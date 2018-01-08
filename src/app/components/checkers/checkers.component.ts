@@ -26,17 +26,7 @@ export class CheckersComponent implements OnInit {
       this.canvas.nativeElement.width = parent.clientWidth;
       this.canvas.nativeElement.height = parent.clientHeight;
       this.ctx = this.canvas.nativeElement.getContext('2d');
-      // this.board.resize(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight);
-      this.board = new Board(new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
-    }
-  }
-
-  resizeWidth(): void {
-    const parent = this.canvas.nativeElement.parentElement;
-    if (parent.clientWidth !== this.canvas.nativeElement.clientWidth) {
-      this.canvas.nativeElement.width = parent.clientWidth;
-      this.ctx = this.canvas.nativeElement.getContext('2d');
-      this.board = new Board(new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
+      this.board = this.board.resize(new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
     }
   }
 

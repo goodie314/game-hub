@@ -12,6 +12,10 @@ export class Vec2 {
     return new Vec2(this.x + vec.x, this.y + vec.y);
   }
 
+  minus (vec: Vec2): Vec2 {
+    return new Vec2(this.x - vec.x, this.y - vec.y);
+  }
+
   equals (vec: Vec2): boolean {
     return this.x === vec.x && this.y === vec.y;
   }
