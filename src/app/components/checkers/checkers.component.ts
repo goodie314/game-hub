@@ -52,7 +52,13 @@ export class CheckersComponent implements OnInit {
   }
 
   canvasClickHandler ($event): void {
-    this.board.handleClick($event.layerX, $event.layerY);
+    const rect = this.canvas.nativeElement.getBoundingClientRect(), // abs. size of element
+      scaleX = this.canvas.nativeElement.width / rect.width,    // relationship bitmap vs. element for X
+      scaleY = this.canvas.nativeElement.height / rect.height;  // relationship bitmap vs. element for Y
+
+    const x = ($event.clientX - rect.left) * scaleX;
+    const y = ($event.clientY - rect.top) * scaleY;
+    this.board.handleClick(x, y);
   }
 
 }
