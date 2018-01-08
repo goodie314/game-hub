@@ -9,6 +9,9 @@ export class CheckersPiece {
   radius: number;
   shade: Shade;
   king: boolean;
+  destination: Vec2;
+  velocity: Vec2;
+  speed = .1;
 
   constructor (color: string, pos: Vec2, radius: number, shade: Shade) {
     this.color = color;
@@ -16,14 +19,22 @@ export class CheckersPiece {
     this.radius = radius;
     this.shade = shade;
     this.king = false;
+    this.destination = this.pos;
+    this.velocity = new Vec2(0, 0);
   }
 
   resize (position: Vec2, radius: number) {
     this.pos = position;
+    this.destination = this.pos;
     this.radius = radius;
   }
 
   draw (ctx: CanvasRenderingContext2D) {
+    if (!this.pos.close(this.destination)) {
+      this.pos = this.pos.add(this.velocity);
+    } else {
+      this.velocity = new Vec2(0, 0);
+    }
     ctx.fillStyle = this.color;
     ctx.beginPath();
     // avoid crashing on resizing to negative numbers
@@ -58,7 +69,9 @@ export class CheckersPiece {
   }
 
   move (square: BoardSquare): void {
-    this.pos = square.middlePos;
+    this.destination = square.middlePos;
+    this.velocity = this.destination.minus(this.pos);
+    this.velocity = this.velocity.times(this.speed);
   }
 
   equals (piece: CheckersPiece) {
