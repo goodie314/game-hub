@@ -16,6 +16,7 @@ export class Board {
   selectedSquare: BoardSquare;
   potentialMoves: PotentialMove[] = [];
   requiredMove = false;
+  darkTurn = true;
 
   constructor(canvasDimensions: Vec2) {
     this.height = canvasDimensions.y - 80;
@@ -125,8 +126,10 @@ export class Board {
           this.movePiece(square);
         } else if (square.checkersPiece) {
           console.log('piece: ', square.checkersPiece.shade);
-          this.selectedSquare = square;
-          this.highlightMoves(square, i);
+          if (this.validTurn(square.checkersPiece)) {
+            this.selectedSquare = square;
+            this.highlightMoves(square, i);
+          }
         }
       }
     }
@@ -214,7 +217,11 @@ export class Board {
           if (this.potentialMoves.length) {
             this.selectedSquare = selectedSquare;
             this.requiredMove = true;
+          } else {
+            this.nextTurn();
           }
+        } else {
+          this.nextTurn();
         }
 
         return;
@@ -262,5 +269,13 @@ export class Board {
       move.destinationSquare.highlight = false;
     });
     this.potentialMoves = [];
+  }
+
+  validTurn (piece: CheckersPiece): boolean {
+    return (this.darkTurn && (piece.shade === Shade.DARK)) || (!this.darkTurn && (piece.shade === Shade.LIGHT));
+  }
+
+  nextTurn (): void {
+    this.darkTurn = !this.darkTurn;
   }
 }
