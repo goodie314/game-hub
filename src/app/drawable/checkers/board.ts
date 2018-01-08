@@ -6,6 +6,7 @@ import {CheckersPiece} from "./checkers-piece";
 import {Color} from "../../util/enums/color";
 import {PotentialMove} from "../../util/types/potential-move";
 import {CapturedPieceContainer} from "./captured-piece-container";
+import {CheckersAI} from "../../util/types/checkers-ai";
 
 export class Board {
   width: number;
@@ -290,5 +291,10 @@ export class Board {
 
   nextTurn (): void {
     this.darkTurn = !this.darkTurn;
+
+    if (!this.darkTurn) {
+      const ai = new CheckersAI(Shade.LIGHT);
+      ai.takeTurn(this);
+    }
   }
 }
