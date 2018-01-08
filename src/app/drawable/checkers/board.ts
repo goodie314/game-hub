@@ -15,6 +15,7 @@ export class Board {
   lightPieces: CheckersPiece[] = [];
   selectedSquare: BoardSquare;
   potentialMoves: PotentialMove[] = [];
+  requiredMove = false;
 
   constructor(canvasDimensions: Vec2) {
     this.height = canvasDimensions.y - 80;
@@ -188,6 +189,7 @@ export class Board {
     for (const move of this.potentialMoves) {
       if (move.destinationSquare.equals(selectedSquare)) {
         const piece = move.sourceSquare.checkersPiece;
+        this.requiredMove = false;
         this.selectedSquare.checkersPiece.move(selectedSquare);
         selectedSquare.checkersPiece = this.selectedSquare.checkersPiece;
         this.selectedSquare.checkersPiece = null;
@@ -211,6 +213,7 @@ export class Board {
           this.highlightMoves(selectedSquare, index, true);
           if (this.potentialMoves.length) {
             this.selectedSquare = selectedSquare;
+            this.requiredMove = true;
           }
         }
 
@@ -218,7 +221,9 @@ export class Board {
       }
     }
 
-    this.unhighlightMoves();
+    if (!this.requiredMove) {
+      this.unhighlightMoves();
+    }
   }
 
   getSquareIndex (square: BoardSquare) {
