@@ -12,6 +12,7 @@ export class CheckersPiece {
   destination: Vec2;
   velocity: Vec2;
   speed = .1;
+  disabled = false;
 
   constructor (color: string, pos: Vec2, radius: number, shade: Shade) {
     this.color = color;
@@ -32,6 +33,8 @@ export class CheckersPiece {
   draw (ctx: CanvasRenderingContext2D) {
     if (!this.pos.close(this.destination)) {
       this.pos = this.pos.add(this.velocity);
+    } else if (this.disabled) {
+      return;
     } else {
       this.velocity = new Vec2(0, 0);
     }
@@ -72,6 +75,13 @@ export class CheckersPiece {
     this.destination = square.middlePos;
     this.velocity = this.destination.minus(this.pos);
     this.velocity = this.velocity.times(this.speed);
+  }
+
+  moveOffBoard (destination: Vec2): void {
+    this.destination = destination;
+    this.velocity = this.destination.minus(this.pos);
+    this.velocity = this.velocity.times(this.speed);
+    this.disabled = true;
   }
 
   equals (piece: CheckersPiece) {

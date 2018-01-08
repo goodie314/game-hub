@@ -9,6 +9,7 @@ export class CapturedPieceContainer {
   tokenColor: Color;
   token: CheckersPiece;
   capturedPieces: number;
+  movingPieces: CheckersPiece[] = [];
 
   constructor (location: Vec2, height: number, tokenColor: Color, tokenShade: Shade) {
     this.location = location;
@@ -24,9 +25,14 @@ export class CapturedPieceContainer {
     ctx.fillStyle = '#000000';
     ctx.font = "24px Times New Roman";
     ctx.fillText(' X ' + this.capturedPieces, this.location.x + this.token.radius, this.location.y + 6);
+    this.movingPieces.forEach((piece) => {
+      piece.draw(ctx);
+    });
   }
 
-  pieceCaptured (): void {
+  pieceCaptured (piece: CheckersPiece): void {
+    piece.moveOffBoard(this.location);
+    this.movingPieces.push(piece);
     this.capturedPieces++;
   }
 }

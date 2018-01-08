@@ -264,10 +264,10 @@ export class Board {
         this.pieces.splice(i, 1);
         switch (piece.shade) {
           case Shade.LIGHT:
-            this.lightPieceContainer.pieceCaptured();
+            this.lightPieceContainer.pieceCaptured(piece);
             break;
           case Shade.DARK:
-            this.darkPieceContainer.pieceCaptured();
+            this.darkPieceContainer.pieceCaptured(piece);
             break;
         }
         return;
