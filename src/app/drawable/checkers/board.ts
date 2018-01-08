@@ -4,6 +4,7 @@ import {BoardSquare} from "./board-square";
 import {Shade} from "../../util/enums/shade";
 import {CheckersPiece} from "./checkers-piece";
 import {Color} from "../../util/enums/color";
+import {PotentialMove} from "../../util/types/potential-move";
 
 export class Board {
   width: number;
@@ -142,12 +143,14 @@ export class Board {
     if (!potentialMove.checkersPiece && (potentialMove.squareShade === Shade.DARK)) {
       potentialMove.highlight = true;
       this.potentialMoves.push(potentialMove);
+      // this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
     }
 
     potentialMove = this.boardSquares[squareIndex + (multiplier * 9)];
     if (!potentialMove.checkersPiece && (potentialMove.squareShade === Shade.DARK)) {
       potentialMove.highlight = true;
       this.potentialMoves.push(potentialMove);
+      // this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
     }
 
   }
