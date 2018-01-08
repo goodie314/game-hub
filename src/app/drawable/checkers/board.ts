@@ -12,6 +12,8 @@ export class Board {
   boardSquares: BoardSquare[] = [];
   darkPieces: CheckersPiece[] = [];
   lightPieces: CheckersPiece[] = [];
+  selectedSquare: BoardSquare;
+  potentialMoves: BoardSquare[] = [];
 
   constructor(canvasDimensions: Vec2) {
     this.height = canvasDimensions.y - 80;
@@ -62,16 +64,34 @@ export class Board {
     for (let i = 1; i < 24; i++) {
       const square = this.boardSquares[i];
       if (square.squareShade === Shade.DARK) {
-        this.lightPieces.push(new CheckersPiece(Color.WHITE, square.middlePos, (square.squareDim / 2) * .75, Shade.LIGHT));
+        const piece = new CheckersPiece(Color.WHITE, square.middlePos, (square.squareDim / 2) * .75, Shade.LIGHT);
+        this.lightPieces.push(piece);
+        square.checkersPiece = piece;
       }
     }
 
     for (let i = 40; i < 63; i++) {
       const square = this.boardSquares[i];
       if (square.squareShade === Shade.DARK) {
-        this.darkPieces.push(new CheckersPiece(Color.RED, square.middlePos, (square.squareDim / 2) * .75, Shade.DARK));
+        const piece = new CheckersPiece(Color.RED, square.middlePos, (square.squareDim / 2) * .75, Shade.DARK);
+        this.darkPieces.push(piece);
+        square.checkersPiece = piece;
       }
     }
+  }
+
+  resize (width: number, height: number) {
+    this.height = height - 80;
+    if (width < this.height) {
+      this.height = width;
+      this.width = width;
+    } else {
+      this.width = height - 80;
+    }
+
+    const diffX = width - this.width;
+    const diffY = height - this.height;
+    this.topLeft = new Vec2(diffX / 2, diffY / 2);
   }
 
   draw (ctx: CanvasRenderingContext2D) {
@@ -86,5 +106,68 @@ export class Board {
     for (const piece of this.lightPieces) {
       piece.draw(ctx);
     }
+  }
+
+  handleClick(x: number, y: number) {
+    console.log(x, y);
+    for (let i = 0; i < this.boardSquares.length; i++) {
+      const square = this.boardSquares[i];
+      if (square.contains(x, y)) {
+        if (this.selectedSquare) {
+          this.movePiece(square);
+          this.unhighlightMoves();
+        } else if (square.checkersPiece) {
+          console.log('piece: ', square.checkersPiece.shade);
+          this.selectedSquare = square;
+          this.highlightMoves(square, i);
+        }
+      }
+    }
+  }
+
+  highlightMoves (square: BoardSquare, squareIndex: number) {
+    const piece = square.checkersPiece;
+    let multiplier;
+
+    switch (piece.shade) {
+      case Shade.DARK:
+        multiplier = -1;
+        break;
+      case Shade.LIGHT:
+        multiplier = 1;
+        break;
+    }
+
+    let potentialMove = this.boardSquares[squareIndex + (multiplier * 7)];
+    if (!potentialMove.checkersPiece && (potentialMove.squareShade === Shade.DARK)) {
+      potentialMove.highlight = true;
+      this.potentialMoves.push(potentialMove);
+    }
+
+    potentialMove = this.boardSquares[squareIndex + (multiplier * 9)];
+    if (!potentialMove.checkersPiece && (potentialMove.squareShade === Shade.DARK)) {
+      potentialMove.highlight = true;
+      this.potentialMoves.push(potentialMove);
+    }
+
+  }
+
+  movePiece (selectedSquare: BoardSquare) {
+    for (const square of this.potentialMoves) {
+      if (square.equals(selectedSquare)) {
+        this.selectedSquare.checkersPiece.move(selectedSquare);
+        selectedSquare.checkersPiece = this.selectedSquare.checkersPiece;
+        this.selectedSquare.checkersPiece = null;
+      }
+    }
+  }
+
+  unhighlightMoves () {
+    this.selectedSquare = null;
+
+    this.potentialMoves.forEach((square) => {
+      square.highlight = false;
+    });
+    this.potentialMoves = [];
   }
 }

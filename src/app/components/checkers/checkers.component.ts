@@ -26,6 +26,7 @@ export class CheckersComponent implements OnInit {
       this.canvas.nativeElement.width = parent.clientWidth;
       this.canvas.nativeElement.height = parent.clientHeight;
       this.ctx = this.canvas.nativeElement.getContext('2d');
+      // this.board.resize(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight);
       this.board = new Board(new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
     }
   }
@@ -48,6 +49,10 @@ export class CheckersComponent implements OnInit {
     this.board.draw(this.ctx);
 
     requestAnimationFrame(() => { this.draw(); });
+  }
+
+  canvasClickHandler ($event): void {
+    this.board.handleClick($event.layerX, $event.layerY);
   }
 
 }
