@@ -10,4 +10,8 @@ export class PotentialMove {
     this.destinationSquare = destinationSquare;
     this.capturedSquare = capturedSquare;
   }
+
+  copy () {
+    return new PotentialMove(this.sourceSquare, this.destinationSquare, this.capturedSquare);
+  }
 }
