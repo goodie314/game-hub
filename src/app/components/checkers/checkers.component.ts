@@ -3,6 +3,7 @@ import {Board} from "../../drawable/checkers/board";
 import {Vec2} from "../../util/types/vec2";
 import {VS} from "../../util/enums/vs";
 import {ConfirmComponent} from "../confirm/confirm.component";
+import {ExitButton} from "../../drawable/checkers/exit-button";
 
 @Component({
   selector: 'checkers',
@@ -17,6 +18,8 @@ export class CheckersComponent implements OnInit {
   canvas: ElementRef;
   ctx: CanvasRenderingContext2D;
   board: Board;
+  exitButton: ExitButton;
+  exitGame: any;
   gameOver = false;
   gameOverMessage: string;
 
@@ -36,6 +39,16 @@ export class CheckersComponent implements OnInit {
     this.startMenu = false;
     this.gameOver = false;
     this.changeDetector.detectChanges();
+    this.exitButton = new ExitButton (new Vec2(10, 10));
+    this.exitGame = this.exitButton.exit.subscribe(() => {
+      this.confirm.confirm('Are you sure you want to exit to the menu?').subscribe((res) => {
+        if (res) {
+          this.startMenu = true;
+          this.gameOver = true;
+          this.gameOverMessage = null;
+        }
+      });
+    });
     this.board = new Board(this.selectedMatchType, new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
     this.board.gameOver.subscribe((res) => {
       this.startMenu = true;
@@ -63,6 +76,7 @@ export class CheckersComponent implements OnInit {
     this.resize();
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
+    this.exitButton.draw(this.ctx);
     this.board.draw(this.ctx);
 
     requestAnimationFrame(() => { this.draw(); });
@@ -76,6 +90,7 @@ export class CheckersComponent implements OnInit {
     const x = ($event.clientX - rect.left) * scaleX;
     const y = ($event.clientY - rect.top) * scaleY;
     this.board.handleClick(x, y);
+    this.exitButton.clickHandler(x, y);
   }
 
 }
