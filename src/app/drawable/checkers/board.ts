@@ -150,7 +150,7 @@ export class Board {
     }
   }
 
-  highlightMoves (square: BoardSquare, squareIndex: number, jumpsOnly = false) {
+  highlightMoves (square: BoardSquare, squareIndex: number, jumpsOnly = false, highlight = true) {
     const piece = square.checkersPiece;
     let multiplier;
 
@@ -167,20 +167,20 @@ export class Board {
       let potentialMove = this.boardSquares[squareIndex + (multiplier * 7)];
       let hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 7))];
       if (this.isMoveValid(potentialMove) && !jumpsOnly) {
-        potentialMove.highlight = true;
+        potentialMove.highlight = highlight;
         this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
       } else if (this.isMoveValid(hopMove) && potentialMove.checkersPiece && (potentialMove.checkersPiece.shade !== piece.shade)) {
-        hopMove.highlight = true;
+        hopMove.highlight = highlight;
         this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
       }
 
       potentialMove = this.boardSquares[squareIndex + (multiplier * 9)];
       hopMove = this.boardSquares[squareIndex + (2 * (multiplier * 9))];
       if (this.isMoveValid(potentialMove) && !jumpsOnly) {
-        potentialMove.highlight = true;
+        potentialMove.highlight = highlight;
         this.potentialMoves.push(new PotentialMove(square, potentialMove, null));
       } else if (this.isMoveValid(hopMove) && potentialMove.checkersPiece && (potentialMove.checkersPiece.shade !== piece.shade)) {
-        hopMove.highlight = true;
+        hopMove.highlight = highlight;
         this.potentialMoves.push(new PotentialMove(square, hopMove, potentialMove));
       }
       if (piece.king) {

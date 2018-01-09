@@ -11,10 +11,21 @@ export class CheckersAI {
 
   takeTurn (board: Board) {
     const move = this.evaluateBoard(board);
+    window.setTimeout(this.firstHop, 250, this, board, move);
+  }
+
+  firstHop (_this, board: Board, move: PotentialMove) {
     board.movePiece(move.destinationSquare);
-    while (board.potentialMoves.length) {
-      const doubleHop = board.potentialMoves[0];
-      board.movePiece(doubleHop.destinationSquare);
+    if (board.potentialMoves.length) {
+      window.setTimeout(_this.doubleHop, 250, _this, board);
+    }
+  }
+
+  doubleHop (_this, board: Board) {
+    const doubleHop = board.potentialMoves[0];
+    board.movePiece(doubleHop.destinationSquare);
+    if (board.potentialMoves.length) {
+      window.setTimeout(_this.doubleHop, 250, board);
     }
   }
 
@@ -26,7 +37,7 @@ export class CheckersAI {
       const square = squares[i];
       const piece = square.checkersPiece;
       if (piece && piece.shade === this.playerShade) {
-        board.highlightMoves(square, i);
+        board.highlightMoves(square, i, false, false);
       }
     }
 
