@@ -14,6 +14,7 @@ export class CheckersComponent implements OnInit {
   canvas: ElementRef;
   ctx: CanvasRenderingContext2D;
   board: Board;
+  gameOver = false;
 
   startMenu = true;
   availableMatchTypes = [
@@ -29,8 +30,13 @@ export class CheckersComponent implements OnInit {
 
   startGame(): void {
     this.startMenu = false;
+    this.gameOver = false;
     this.changeDetector.detectChanges();
     this.board = new Board(this.selectedMatchType, new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
+    this.board.gameOver.subscribe((res) => {
+      this.startMenu = true;
+      this.gameOver = true;
+    });
     this.resize();
     this.draw();
   }
@@ -46,6 +52,9 @@ export class CheckersComponent implements OnInit {
   }
 
   draw(): void {
+    if (this.gameOver) {
+      return;
+    }
     this.resize();
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 

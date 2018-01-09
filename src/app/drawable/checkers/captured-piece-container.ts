@@ -10,6 +10,7 @@ export class CapturedPieceContainer {
   token: CheckersPiece;
   capturedPieces: number;
   movingPieces: CheckersPiece[] = [];
+  highlight = false;
 
   constructor (location: Vec2, height: number, tokenColor: Color, tokenShade: Shade) {
     this.location = location;
@@ -21,6 +22,7 @@ export class CapturedPieceContainer {
   }
 
   draw (ctx): void {
+    this.token.king = this.highlight;
     this.token.draw(ctx);
     ctx.fillStyle = '#000000';
     ctx.font = "24px Times New Roman";

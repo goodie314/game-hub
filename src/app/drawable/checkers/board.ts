@@ -8,6 +8,7 @@ import {PotentialMove} from "../../util/types/potential-move";
 import {CapturedPieceContainer} from "./captured-piece-container";
 import {CheckersAI} from "../../util/types/checkers-ai";
 import {VS} from "../../util/enums/vs";
+import {EventEmitter} from "@angular/core";
 
 export class Board {
   matchType: VS;
@@ -22,6 +23,7 @@ export class Board {
   darkTurn = true;
   darkPieceContainer: CapturedPieceContainer;
   lightPieceContainer: CapturedPieceContainer;
+  gameOver: EventEmitter<any> = new EventEmitter();
 
   constructor(matchType: VS, canvasDimensions: Vec2) {
     this.matchType = matchType;
@@ -47,6 +49,7 @@ export class Board {
     const bottomLocation = new Vec2(centerX, topLeft.y + this.height + (spaceBelow / 2));
     this.darkPieceContainer = new CapturedPieceContainer(topLocation, spaceBelow, Color.RED, Shade.DARK);
     this.lightPieceContainer = new CapturedPieceContainer(bottomLocation, spaceBelow, Color.WHITE, Shade.LIGHT);
+    this.lightPieceContainer.highlight = true;
   }
 
   setBoardSquares () {
@@ -107,6 +110,7 @@ export class Board {
   resize (canvasDimensions: Vec2) {
     const board = new Board(this.matchType, canvasDimensions);
     board.darkTurn = this.darkTurn;
+    board.gameOver = this.gameOver;
     board.restoreSavedState(this.boardSquares);
     return board;
   }
@@ -293,7 +297,20 @@ export class Board {
   }
 
   nextTurn (): void {
+    if (this.darkPieceContainer.capturedPieces === 12 || this.lightPieceContainer.capturedPieces === 12) {
+      this.gameOver.emit(true);
+      return;
+    }
+
     this.darkTurn = !this.darkTurn;
+
+    if (this.darkTurn) {
+      this.darkPieceContainer.highlight = false;
+      this.lightPieceContainer.highlight = true;
+    } else {
+      this.darkPieceContainer.highlight = true;
+      this.lightPieceContainer.highlight = false;
+    }
 
     switch (this.matchType) {
       case VS.COMPUTER:
