@@ -1,5 +1,9 @@
 <div style="height: 100%">
   <div *ngIf="startMenu" class="col start-menu">
+    <div *ngIf="gameOverMessage">
+      <p>GAME OVER</p>
+      <p>FINAL SCORE: {{gameOverMessage}}</p>
+    </div>
     <div class="col type-selector">
       <p>Select Game Type: </p>
       <select [(ngModel)]="selectedMatchType">
@@ -10,3 +14,4 @@
   </div>
   <canvas *ngIf="!startMenu" #canvas (click)="canvasClickHandler($event)"></canvas>
 </div>
+<confirm #confirm></confirm>

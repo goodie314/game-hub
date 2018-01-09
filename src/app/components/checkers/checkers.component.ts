@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from "@angu
 import {Board} from "../../drawable/checkers/board";
 import {Vec2} from "../../util/types/vec2";
 import {VS} from "../../util/enums/vs";
+import {ConfirmComponent} from "../confirm/confirm.component";
 
 @Component({
   selector: 'checkers',
@@ -10,11 +11,14 @@ import {VS} from "../../util/enums/vs";
 })
 
 export class CheckersComponent implements OnInit {
+  @ViewChild('confirm')
+  confirm: ConfirmComponent;
   @ViewChild('canvas')
   canvas: ElementRef;
   ctx: CanvasRenderingContext2D;
   board: Board;
   gameOver = false;
+  gameOverMessage: string;
 
   startMenu = true;
   availableMatchTypes = [
@@ -36,6 +40,7 @@ export class CheckersComponent implements OnInit {
     this.board.gameOver.subscribe((res) => {
       this.startMenu = true;
       this.gameOver = true;
+      this.gameOverMessage = res;
     });
     this.resize();
     this.draw();

@@ -1,0 +1,15 @@
+<!--<button id="displayBtn" [class]="styleClass" [disabled]="disabled" (click)="popup=true; beforeConfirm.emit()">-->
+  <!--<ng-content></ng-content>-->
+<!--</button>-->
+<div class="cover" id="popup" [@popup] *ngIf="popup">
+  <div class="confirm-popup">
+    <span id="closeBtn" class="ion-md-close close" (click)="accept.emit(false); popup=false"></span>
+    <br/>
+    <p class="row message">{{message}}</p>
+    <div class="row options">
+      <button id="cancelBtn" (click)="accept.emit(false); popup=false" [@popup] class="btn btn-danger">Cancel</button>
+      <button id="confirmBtn" (click)="accept.emit(true); popup=false" [@popup] class="btn btn-default">Confirm</button>
+    </div>
+    <br/>
+  </div>
+</div>

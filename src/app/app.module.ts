@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import {CheckersModule} from "./components/checkers/checkers.module";
 import {RouterModule} from "@angular/router";
 import {routes} from "./routes";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {routes} from "./routes";
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CheckersModule,
     RouterModule.forRoot(routes)
   ],

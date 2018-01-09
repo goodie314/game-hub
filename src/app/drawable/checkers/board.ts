@@ -298,7 +298,7 @@ export class Board {
 
   nextTurn (): void {
     if (this.darkPieceContainer.capturedPieces === 12 || this.lightPieceContainer.capturedPieces === 12) {
-      this.gameOver.emit(true);
+      this.gameOver.emit('DARK: ' + this.lightPieceContainer.capturedPieces + ', LIGHT: ' + this.darkPieceContainer.capturedPieces);
       return;
     }
 
