@@ -1,3 +1,12 @@
 <div style="height: 100%">
-  <canvas #canvas (click)="canvasClickHandler($event)"></canvas>
+  <div *ngIf="startMenu" class="col start-menu">
+    <div class="col type-selector">
+      <p>Select Game Type: </p>
+      <select [(ngModel)]="selectedMatchType">
+        <option *ngFor="let type of availableMatchTypes">{{type}}</option>
+      </select>
+    </div>
+    <button (click)="startGame()">START</button>
+  </div>
+  <canvas *ngIf="!startMenu" #canvas (click)="canvasClickHandler($event)"></canvas>
 </div>

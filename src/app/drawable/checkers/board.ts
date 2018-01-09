@@ -7,8 +7,10 @@ import {Color} from "../../util/enums/color";
 import {PotentialMove} from "../../util/types/potential-move";
 import {CapturedPieceContainer} from "./captured-piece-container";
 import {CheckersAI} from "../../util/types/checkers-ai";
+import {VS} from "../../util/enums/vs";
 
 export class Board {
+  matchType: VS;
   width: number;
   height: number;
   topLeft: Vec2;
@@ -21,7 +23,8 @@ export class Board {
   darkPieceContainer: CapturedPieceContainer;
   lightPieceContainer: CapturedPieceContainer;
 
-  constructor(canvasDimensions: Vec2) {
+  constructor(matchType: VS, canvasDimensions: Vec2) {
+    this.matchType = matchType;
     this.height = canvasDimensions.y - 80;
     if (canvasDimensions.x < this.height) {
       this.height = canvasDimensions.x;
@@ -102,7 +105,7 @@ export class Board {
   }
 
   resize (canvasDimensions: Vec2) {
-    const board = new Board(canvasDimensions);
+    const board = new Board(this.matchType, canvasDimensions);
     board.darkTurn = this.darkTurn;
     board.restoreSavedState(this.boardSquares);
     return board;
@@ -292,9 +295,15 @@ export class Board {
   nextTurn (): void {
     this.darkTurn = !this.darkTurn;
 
-    if (!this.darkTurn) {
-      const ai = new CheckersAI(Shade.LIGHT);
-      ai.takeTurn(this);
+    switch (this.matchType) {
+      case VS.COMPUTER:
+        if (!this.darkTurn) {
+          const ai = new CheckersAI(Shade.LIGHT);
+          ai.takeTurn(this);
+        }
+        break;
+      default:
+        break;
     }
   }
 }

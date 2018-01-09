@@ -1,6 +1,7 @@
-import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {Board} from "../../drawable/checkers/board";
 import {Vec2} from "../../util/types/vec2";
+import {VS} from "../../util/enums/vs";
 
 @Component({
   selector: 'checkers',
@@ -14,8 +15,22 @@ export class CheckersComponent implements OnInit {
   ctx: CanvasRenderingContext2D;
   board: Board;
 
+  startMenu = true;
+  availableMatchTypes = [
+    VS.COMPUTER,
+    VS.PLAYER_LOCAL
+  ];
+  selectedMatchType: VS = VS.COMPUTER;
+
+  constructor (private changeDetector: ChangeDetectorRef) {}
+
   ngOnInit(): void {
-    this.board = new Board(new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
+  }
+
+  startGame(): void {
+    this.startMenu = false;
+    this.changeDetector.detectChanges();
+    this.board = new Board(this.selectedMatchType, new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
     this.resize();
     this.draw();
   }
