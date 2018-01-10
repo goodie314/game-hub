@@ -40,3 +40,12 @@ checkers {
 .ion-ios-menu {
   font-size: 22pt;
 }
+
+.signon {
+  flex: 0 1 auto;
+}
+
+.signon a {
+  text-decoration: none;
+  color: black;
+}

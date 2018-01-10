@@ -30,6 +30,10 @@ html, body {
   background-color: #bcbcbc;
 }
 
+.btn-default:active {
+  background-color: #acacac;
+}
+
 .btn-danger {
   background-color: rgba(255, 0, 0, 0.69);
 }

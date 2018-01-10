@@ -7,6 +7,7 @@ import {CheckersModule} from "./components/checkers/checkers.module";
 import {RouterModule} from "@angular/router";
 import {routes} from "./routes";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {SignonModule} from "./components/signon/signon.module";
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     BrowserModule,
     BrowserAnimationsModule,
     CheckersModule,
+    SignonModule,
     RouterModule.forRoot(routes)
   ],
   providers: [],

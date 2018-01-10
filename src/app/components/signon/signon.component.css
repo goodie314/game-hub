@@ -1,0 +1,13 @@
+.signon {
+  justify-content: center;
+  align-items: center;
+}
+
+.signon-options {
+  align-self: stretch;
+  justify-content: center;
+}
+
+.signon-options button {
+  margin: 0 20px 0 20px;
+}
