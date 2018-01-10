@@ -18,13 +18,10 @@ export class SignonComponent {
   private signin(): void {
     console.log('user name: ', this.username);
     console.log('password: ', this.password);
-    this.signonService.signon(this.username, this.password);
-    GlobalData.user = {
-      userName: this.username,
-      firstName: null,
-      lastName: null,
-      activeGames: []
-    }
+    this.signonService.signon(this.username, this.password)
+      .subscribe((user) => {
+        GlobalData.user = user;
+      });
   }
 
   private signup(): void {
