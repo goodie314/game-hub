@@ -8,6 +8,7 @@ import {RouterModule} from "@angular/router";
 import {routes} from "./routes";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SignonModule} from "./components/signon/signon.module";
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import {SignonModule} from "./components/signon/signon.module";
     BrowserModule,
     BrowserAnimationsModule,
     CheckersModule,
+    HttpClientModule,
     SignonModule,
     RouterModule.forRoot(routes)
   ],
