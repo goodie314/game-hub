@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row header">
     <p style="flex: 1 1 auto">Game Hub</p>
-    <button class="btn btn-default signon"><a routerLink="signon">Sign in</a></button>
+    <button class="btn btn-default signon" routerLink="signon" *ngIf="!user">Sign in</button>
   </div>
   <div class="row navigation">
     <a routerLink="/">Checkers</a>
