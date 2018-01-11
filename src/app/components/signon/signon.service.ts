@@ -15,7 +15,7 @@ export class SignonService {
       password: password
     };
 
-    return this.http.post <User> ('', body, {headers: this.headers()});
+    return this.http.post <any>('http://localhost:8080/', body, {headers: this.headers()});
   }
 
   private headers(): HttpHeaders {

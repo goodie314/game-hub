@@ -20,7 +20,8 @@ export class SignonComponent {
     console.log('password: ', this.password);
     this.signonService.signon(this.username, this.password)
       .subscribe((user) => {
-        GlobalData.user = user;
+      console.log(user);
+        // GlobalData.user = user;
       });
   }
 
