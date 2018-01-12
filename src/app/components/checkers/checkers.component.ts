@@ -4,6 +4,7 @@ import {Vec2} from "../../util/types/vec2";
 import {VS} from "../../util/enums/vs";
 import {ConfirmComponent} from "../confirm/confirm.component";
 import {ExitButton} from "../../drawable/checkers/exit-button";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'checkers',
@@ -32,7 +33,9 @@ export class CheckersComponent implements OnInit {
   ];
   selectedMatchType: VS = VS.COMPUTER;
 
-  constructor (private changeDetector: ChangeDetectorRef) {}
+  constructor(private changeDetector: ChangeDetectorRef,
+              private router: Router,
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
   }
@@ -97,6 +100,9 @@ export class CheckersComponent implements OnInit {
 
   gameTypeSelect (): void {
     this.startDisabled = (this.selectedMatchType === VS.ONLINE);
+    if (this.startDisabled) {
+      this.router.navigate(['.', 'lobby'], {relativeTo: this.route});
+    }
   }
 
 }
