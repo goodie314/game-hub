@@ -17,17 +17,8 @@ export class UserAddService {
   }
 
   public makeRequest(gameRequest: GameRequest): Observable<any> {
-    const body: GameRequest = {
-      game: 'checkers',
-      requester: {
-        userName: 'Matt'
-      },
-      invitees: {
-        'matt': false
-      }
-    };
     return this.http.post<any>(`${environment.gameHubServiceUrl}/game-request`,
-      body, {headers: this.headers()});
+      gameRequest, {headers: this.headers()});
   }
 
   private headers(): HttpHeaders {

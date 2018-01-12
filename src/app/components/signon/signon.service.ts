@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {User} from "../../util/types/user";
@@ -8,6 +8,7 @@ import {environment} from "../../../environments/environment";
 export class SignonService {
 
   private signedInUser: User;
+  private signInEvent: EventEmitter<User> = new EventEmitter();
 
   constructor(private http: HttpClient) {
   }
@@ -25,6 +26,15 @@ export class SignonService {
       return this.http.post <User>(`${environment.gameHubServiceUrl}/sign-up`,
         body, {headers: this.headers()});
     }
+  }
+
+  public getSignonEvent(): EventEmitter<User> {
+    return this.signInEvent;
+  }
+
+  public signonSuccessful(user: User): void {
+    this.setSignedInUser(user);
+    this.signInEvent.emit(user);
   }
 
   public getSignedInUser(): User {

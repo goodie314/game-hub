@@ -1,7 +1,9 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {User} from "../../util/types/user";
 import {UserAddService} from "./user-add.service";
 import {MessageService} from "../message/message.service";
+import {GameRequest} from "../../util/types/game-request";
+import {SignonService} from "../signon/signon.service";
 
 @Component({
   selector: 'user-add',
@@ -10,22 +12,39 @@ import {MessageService} from "../message/message.service";
 })
 
 export class UserAddComponent implements OnInit {
+  @Input()
+  game: string;
   users: User[] = [];
   searchText: string;
 
   constructor(private userAddService: UserAddService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private signonService: SignonService) {
   }
 
   ngOnInit(): void {
     this.userAddService.getUsers()
       .subscribe((users) => {
         this.users = users;
-        console.log('users: ', users);
       });
   }
 
   submit(): void {
-    this.userAddService.makeRequest(null).subscribe();
+    const user = this.signonService.getSignedInUser();
+    const invitees = [this.searchText].filter((invitee) => {
+      return user.userName !== invitee;
+    });
+    if (!invitees.length) {
+      return;
+    }
+    const gameRequest: GameRequest = {
+      game: this.game,
+      requester: user.userName,
+      invitees: invitees,
+      creationDate: new Date()
+    };
+    this.userAddService.makeRequest(gameRequest).subscribe(() => {
+      console.log('made request');
+    });
   }
 }

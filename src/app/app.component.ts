@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {CheckersComponent} from "./components/checkers/checkers.component";
 import {GlobalData} from "./util/types/global-data";
 import {User} from "./util/types/user";
+import {SignonService} from "./components/signon/signon.service";
 
 @Component({
   selector: 'app-root',
@@ -9,21 +10,16 @@ import {User} from "./util/types/user";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Game Hub';
-  menuToggle = true;
-  static user: User;
+  private title = 'Game Hub';
+  private user: User;
 
   ngOnInit(): void {
-    // this.user = GlobalData.user;
-    // console.log(this.user);
+    this.signonService.getSignonEvent().subscribe((user) => {
+      this.user = user;
+      console.log('user changed to: ', user);
+    })
   }
 
-  static setUser () {
-    AppComponent.user = GlobalData.user;
-    console.log(AppComponent.user);
-  }
-
-  toggleMenu(): void {
-    this.menuToggle = !this.menuToggle;
+  constructor(private signonService: SignonService) {
   }
 }

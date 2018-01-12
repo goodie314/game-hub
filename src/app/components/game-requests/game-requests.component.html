@@ -1,3 +1,8 @@
 <div>
   Game requests
+  <ul>
+    <li *ngFor="let request of activeGameRequests">
+      {{request.game}} - {{request.requester}}
+    </li>
+  </ul>
 </div>

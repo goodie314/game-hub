@@ -1,9 +1,10 @@
-import {Component} from "@angular/core";
+import {Component, EventEmitter, Output} from "@angular/core";
 import {GlobalData} from "../../util/types/global-data";
 import {SignonService} from "./signon.service";
 import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppComponent} from "../../app.component";
+import {User} from "../../util/types/user";
 
 @Component({
   selector: 'signon',
@@ -12,8 +13,8 @@ import {AppComponent} from "../../app.component";
 })
 
 export class SignonComponent {
-  username: string;
-  password: string;
+  private username: string;
+  private password: string;
 
   constructor (private signonService: SignonService,
                private router: Router,
@@ -25,9 +26,7 @@ export class SignonComponent {
       this.signonService.signon(this.username, this.password, true)
         .subscribe((user) => {
           if (user) {
-            this.signonService.setSignedInUser(user);
-            // GlobalData.user = user;
-            AppComponent.setUser();
+            this.signonService.signonSuccessful(user);
             this.router.navigate([''], {relativeTo: this.route});
           }
         });
@@ -39,7 +38,7 @@ export class SignonComponent {
       this.signonService.signon(this.username, this.password, false)
         .subscribe((user) => {
           if (user) {
-            GlobalData.user = user;
+            this.signonService.signonSuccessful(user);
             this.router.navigate([''], {relativeTo: this.route});
           }
         })
