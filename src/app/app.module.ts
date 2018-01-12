@@ -9,6 +9,7 @@ import {routes} from "./routes";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SignonModule} from "./components/signon/signon.module";
 import {HttpClientModule} from "@angular/common/http";
+import {MessageModule} from "./components/message/message.module";
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import {HttpClientModule} from "@angular/common/http";
     BrowserAnimationsModule,
     CheckersModule,
     HttpClientModule,
+    MessageModule,
     SignonModule,
     RouterModule.forRoot(routes)
   ],

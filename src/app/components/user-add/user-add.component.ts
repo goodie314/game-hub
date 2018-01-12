@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {User} from "../../util/types/user";
 import {UserAddService} from "./user-add.service";
+import {MessageService} from "../message/message.service";
 
 @Component({
   selector: 'user-add',
@@ -10,11 +11,10 @@ import {UserAddService} from "./user-add.service";
 
 export class UserAddComponent implements OnInit {
   users: User[] = [];
-  visibleUsers: User[] = [];
   searchText: string;
-  dropdown = false;
 
-  constructor(private userAddService: UserAddService) {
+  constructor(private userAddService: UserAddService,
+              private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -25,13 +25,7 @@ export class UserAddComponent implements OnInit {
       });
   }
 
-  filterResults(): void {
-    if (this.searchText) {
-      this.visibleUsers = this.users.filter((user) => {
-        return user.userName.toLowerCase().includes(this.searchText.toLowerCase());
-      });
-    } else {
-      this.visibleUsers = [];
-    }
+  submit(): void {
+    this.messageService.error('test');
   }
 }
