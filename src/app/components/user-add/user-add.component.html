@@ -1,0 +1,8 @@
+<div>
+  <input type="search" [(ngModel)]="searchText" (keyup)="filterResults()" (focus)="dropdown=true" (blur)="dropdown=false" />
+  <div class="row dropdown" *ngIf="dropdown">
+    <ul>
+      <li *ngFor="let user of visibleUsers">{{user.userName}}</li>
+    </ul>
+  </div>
+</div>

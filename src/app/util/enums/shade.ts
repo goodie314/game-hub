@@ -1,4 +1,4 @@
 export enum Shade {
-  LIGHT,
-  DARK
+  LIGHT = 0,
+  DARK = 1
 }

@@ -24,6 +24,7 @@ export class Board {
   darkPieceContainer: CapturedPieceContainer;
   lightPieceContainer: CapturedPieceContainer;
   gameOver: EventEmitter<any> = new EventEmitter();
+  playerShade: Shade = Shade.DARK;
 
   constructor(matchType: VS, canvasDimensions: Vec2) {
     this.matchType = matchType;
@@ -111,6 +112,8 @@ export class Board {
     const board = new Board(this.matchType, canvasDimensions);
     board.darkTurn = this.darkTurn;
     board.gameOver = this.gameOver;
+    board.darkPieceContainer.capturedPieces = this.darkPieceContainer.capturedPieces;
+    board.lightPieceContainer.capturedPieces = this.lightPieceContainer.capturedPieces;
     board.restoreSavedState(this.boardSquares);
     return board;
   }
@@ -142,15 +145,17 @@ export class Board {
   }
 
   handleClick(x: number, y: number) {
-    for (let i = 0; i < this.boardSquares.length; i++) {
-      const square = this.boardSquares[i];
-      if (square.contains(x, y)) {
-        if (this.selectedSquare) {
-          this.movePiece(square);
-        } else if (square.checkersPiece) {
-          if (this.validTurn(square.checkersPiece)) {
-            this.selectedSquare = square;
-            this.highlightMoves(square, i);
+    if (this.playerShade === Shade.DARK && this.darkTurn || this.playerShade === Shade.LIGHT && !this.darkTurn) {
+      for (let i = 0; i < this.boardSquares.length; i++) {
+        const square = this.boardSquares[i];
+        if (square.contains(x, y)) {
+          if (this.selectedSquare) {
+            this.movePiece(square);
+          } else if (square.checkersPiece) {
+            if (this.validTurn(square.checkersPiece)) {
+              this.selectedSquare = square;
+              this.highlightMoves(square, i);
+            }
           }
         }
       }
@@ -293,7 +298,13 @@ export class Board {
   }
 
   validTurn (piece: CheckersPiece): boolean {
-    return (this.darkTurn && (piece.shade === Shade.DARK)) || (!this.darkTurn && (piece.shade === Shade.LIGHT));
+    if (this.playerShade === Shade.DARK && this.darkTurn) {
+      return piece.shade === Shade.DARK;
+    } else if (this.playerShade === Shade.LIGHT && !this.darkTurn) {
+      return piece.shade === Shade.LIGHT;
+    } else {
+      return false;
+    }
   }
 
   nextTurn (): void {

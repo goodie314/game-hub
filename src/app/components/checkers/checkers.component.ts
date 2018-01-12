@@ -24,9 +24,11 @@ export class CheckersComponent implements OnInit {
   gameOverMessage: string;
 
   startMenu = true;
+  startDisabled = false;
   availableMatchTypes = [
     VS.COMPUTER,
-    VS.PLAYER_LOCAL
+    VS.PLAYER_LOCAL,
+    VS.ONLINE
   ];
   selectedMatchType: VS = VS.COMPUTER;
 
@@ -91,6 +93,10 @@ export class CheckersComponent implements OnInit {
     const y = ($event.clientY - rect.top) * scaleY;
     this.board.handleClick(x, y);
     this.exitButton.clickHandler(x, y);
+  }
+
+  gameTypeSelect (): void {
+    this.startDisabled = (this.selectedMatchType === VS.ONLINE);
   }
 
 }

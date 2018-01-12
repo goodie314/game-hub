@@ -1,0 +1,13 @@
+.dropdown {
+  position: fixed;
+  width: auto;
+  z-index: 30;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: stretch;
+  align-self: stretch;
+}
+
+.dropdown ul {
+  align-self: stretch;
+}
