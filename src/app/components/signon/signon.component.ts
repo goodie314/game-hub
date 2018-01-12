@@ -25,7 +25,8 @@ export class SignonComponent {
       this.signonService.signon(this.username, this.password, true)
         .subscribe((user) => {
           if (user) {
-            GlobalData.user = user;
+            this.signonService.setSignedInUser(user);
+            // GlobalData.user = user;
             AppComponent.setUser();
             this.router.navigate([''], {relativeTo: this.route});
           }

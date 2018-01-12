@@ -26,6 +26,6 @@ export class UserAddComponent implements OnInit {
   }
 
   submit(): void {
-    this.messageService.error('test');
+    this.userAddService.makeRequest(null).subscribe();
   }
 }

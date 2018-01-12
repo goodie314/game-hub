@@ -7,10 +7,12 @@ import {environment} from "../../../environments/environment";
 @Injectable()
 export class SignonService {
 
+  private signedInUser: User;
+
   constructor(private http: HttpClient) {
   }
 
-  signon (userName: string, password: string, existing: boolean): Observable<User> {
+  public signon (userName: string, password: string, existing: boolean): Observable<User> {
     const body = {
       userName: userName,
       password: password
@@ -23,6 +25,14 @@ export class SignonService {
       return this.http.post <User>(`${environment.gameHubServiceUrl}/sign-up`,
         body, {headers: this.headers()});
     }
+  }
+
+  public getSignedInUser(): User {
+    return this.signedInUser;
+  }
+
+  public setSignedInUser(user: User): void {
+    this.signedInUser = user;
   }
 
   private headers(): HttpHeaders {

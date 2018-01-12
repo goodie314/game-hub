@@ -10,6 +10,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SignonModule} from "./components/signon/signon.module";
 import {HttpClientModule} from "@angular/common/http";
 import {MessageModule} from "./components/message/message.module";
+import {LobbyModule} from "./components/lobby/lobby.module";
+import {GameRequestsModule} from "./components/game-requests/game-requests.module";
 
 
 @NgModule({
@@ -21,6 +23,7 @@ import {MessageModule} from "./components/message/message.module";
     BrowserAnimationsModule,
     CheckersModule,
     HttpClientModule,
+    LobbyModule,
     MessageModule,
     SignonModule,
     RouterModule.forRoot(routes)
