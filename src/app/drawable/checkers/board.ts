@@ -1,4 +1,3 @@
-
 import {Vec2} from "../../util/types/vec2";
 import {BoardSquare} from "./board-square";
 import {Shade} from "../../util/enums/shade";
@@ -9,6 +8,9 @@ import {CapturedPieceContainer} from "./captured-piece-container";
 import {CheckersAI} from "../../util/types/checkers-ai";
 import {VS} from "../../util/enums/vs";
 import {EventEmitter} from "@angular/core";
+import {CheckersService} from "../../components/checkers/checkers.service";
+import {CheckersGameState} from "../../util/types/checkers-game-state";
+import {User} from "../../util/types/user";
 
 export class Board {
   matchType: VS;
@@ -25,6 +27,8 @@ export class Board {
   lightPieceContainer: CapturedPieceContainer;
   gameOver: EventEmitter<any> = new EventEmitter();
   playerShade: Shade = Shade.DARK;
+  lastMove: PotentialMove[] = [];
+  onlineNextTurn: EventEmitter<CheckersGameState> = new EventEmitter();
 
   constructor(matchType: VS, canvasDimensions: Vec2) {
     this.matchType = matchType;
@@ -41,7 +45,26 @@ export class Board {
     this.topLeft = new Vec2(diffX / 2, diffY / 2);
     this.setCapturedPieceContainers(this.topLeft, 40, canvasDimensions.x);
     this.setBoardSquares();
-    this.setPieces();
+    // if (gameId && user && checkersService) {
+    //   this.gameId = gameId;
+    //   this.user = user;
+    //   this.checkersService = checkersService;
+    //   this.checkersService.getGame(gameId).subscribe(game => {
+    //     const savedState: CheckersGameState = JSON.parse(game.currentGameState);
+    //     this.players = game.players;
+    //     if (game.players[0] === this.user.userName) {
+    //       this.playerShade = Shade.DARK;
+    //     } else {
+    //       this.playerShade = Shade.LIGHT;
+    //       this.pollData();
+    //     }
+    //     if (savedState) {
+    //       this.restoreSavedState(savedState.board.boardSquares);
+    //     }
+    //   });
+    // } else {
+      this.setPieces();
+    // }
   }
 
   setCapturedPieceContainers (topLeft: Vec2, spaceBelow: number, width: number) {
@@ -114,6 +137,8 @@ export class Board {
     board.gameOver = this.gameOver;
     board.darkPieceContainer.capturedPieces = this.darkPieceContainer.capturedPieces;
     board.lightPieceContainer.capturedPieces = this.lightPieceContainer.capturedPieces;
+    board.onlineNextTurn = this.onlineNextTurn;
+    board.playerShade = this.playerShade;
     board.restoreSavedState(this.boardSquares);
     return board;
   }
@@ -236,6 +261,7 @@ export class Board {
         }
 
         const savedMove = move.copy();
+        this.lastMove.push(savedMove);
         this.unhighlightMoves();
         if (savedMove.capturedSquare) {
           this.removePiece(savedMove.capturedSquare);
@@ -330,8 +356,58 @@ export class Board {
           ai.takeTurn(this);
         }
         break;
+      case VS.PLAYER_LOCAL:
+        if (this.playerShade === Shade.DARK) {
+          this.playerShade = Shade.LIGHT;
+        } else {
+          this.playerShade = Shade.DARK
+        }
+        break;
+      case VS.ONLINE:
+        const boardState: CheckersGameState = {
+          boardSquares: this.boardSquares,
+          lastMoves: this.lastMove,
+          updatingShade: this.playerShade,
+          darkTurn: this.darkTurn,
+          darkScore: this.darkPieceContainer.capturedPieces,
+          lightScore: this.lightPieceContainer.capturedPieces
+        };
+        // const game: Game = {
+        //   gameId: this.gameId,
+        //   currentGameState: JSON.stringify(boardState),
+        //   players: this.players
+        // };
+        this.onlineNextTurn.emit(boardState);
+        this.lastMove = [];
+        break;
       default:
         break;
+    }
+  }
+
+  restoreOnlineState(checkersGameState: CheckersGameState) {
+    const squares = checkersGameState.boardSquares;
+    this.darkTurn = checkersGameState.darkTurn;
+    if (this.darkTurn) {
+      this.darkPieceContainer.highlight = false;
+      this.lightPieceContainer.highlight = true;
+    } else {
+      this.darkPieceContainer.highlight = true;
+      this.lightPieceContainer.highlight = false;
+    }
+    this.lightPieceContainer.capturedPieces = checkersGameState.lightScore;
+    this.darkPieceContainer.capturedPieces = checkersGameState.darkScore;
+    this.pieces = [];
+    for (let i = 0; i < this.boardSquares.length; i++) {
+      const square = this.boardSquares[i];
+      const oldPiece = squares[i].checkersPiece;
+      if (oldPiece) {
+        square.checkersPiece = new CheckersPiece(oldPiece.color, oldPiece.pos, oldPiece.radius, oldPiece.shade);
+        square.checkersPiece.resize(square.middlePos, (square.squareDim / 2) * .75);
+        this.pieces.push(square.checkersPiece);
+      } else {
+        square.checkersPiece = null;
+      }
     }
   }
 }

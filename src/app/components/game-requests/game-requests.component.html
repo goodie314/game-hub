@@ -1,8 +1,41 @@
 <div>
   Game requests
-  <ul>
-    <li *ngFor="let request of activeGameRequests">
-      {{request.game}} - {{request.requester}}
-    </li>
-  </ul>
+  <table>
+    <tr>
+      <td>Game</td>
+      <td>Requested On</td>
+      <td>Requester</td>
+      <td>Accept</td>
+    </tr>
+    <tr *ngFor="let request of activeGameRequests">
+      <td>{{request.game}}</td>
+      <td>{{request.creationDate}}</td>
+      <td>{{request.requester}}</td>
+      <td><button class="btn btn-default" (click)="acceptRequest(request)">Accept</button></td>
+    </tr>
+  </table>
+  Active Games
+  <table>
+    <tr>
+      <td></td>
+    </tr>
+    <tr *ngFor="let game of activeGames">
+      <td>{{game.gameId}}</td>
+      <td>
+        <ul>
+          <li *ngFor="let opponent of game.players">
+            {{opponent}}
+          </li>
+        </ul>
+      </td>
+      <td>
+        <button class="btn btn-default" (click)="openGame(game)">Open</button>
+      </td>
+    </tr>
+  </table>
+  <!--<ul>-->
+    <!--<li *ngFor="let request of activeGameRequests">-->
+      <!--{{request.game}} - {{request.requester}} <button (click)="acceptRequest(request)">Accept</button>-->
+    <!--</li>-->
+  <!--</ul>-->
 </div>

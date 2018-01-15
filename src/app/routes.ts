@@ -6,7 +6,8 @@ import {LobbyComponent} from "./components/lobby/lobby.component";
 
 export const routes: Routes = [
   { path: '', redirectTo: 'checkers', pathMatch: 'full' },
-  { path: 'checkers', component: CheckersComponent },
   { path: 'signon', component: SignonComponent },
-  { path: ':game/lobby', component: LobbyComponent }
+  { path: ':game/lobby', component: LobbyComponent },
+  { path: 'checkers', component: CheckersComponent },
+  { path: 'checkers/:gameId', component: CheckersComponent }
 ];

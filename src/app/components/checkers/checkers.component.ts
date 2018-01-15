@@ -5,6 +5,14 @@ import {VS} from "../../util/enums/vs";
 import {ConfirmComponent} from "../confirm/confirm.component";
 import {ExitButton} from "../../drawable/checkers/exit-button";
 import {ActivatedRoute, Router} from "@angular/router";
+import {CheckersService} from "./checkers.service";
+import {SignonService} from "../signon/signon.service";
+import {PotentialMove} from "../../util/types/potential-move";
+import {CheckersGameState} from "../../util/types/checkers-game-state";
+import {User} from "../../util/types/user";
+import {Shade} from "../../util/enums/shade";
+import {Observable} from "rxjs/Observable";
+import {Game} from "../../util/types/game";
 
 @Component({
   selector: 'checkers',
@@ -23,24 +31,40 @@ export class CheckersComponent implements OnInit {
   exitGame: any;
   gameOver = false;
   gameOverMessage: string;
+  gameId: number;
+  user: User;
 
   startMenu = true;
   startDisabled = false;
   availableMatchTypes = [
     VS.COMPUTER,
     VS.PLAYER_LOCAL,
-    VS.ONLINE
   ];
   selectedMatchType: VS = VS.COMPUTER;
+  onlineNextTurn: Observable<any>
 
   constructor(private changeDetector: ChangeDetectorRef,
               private router: Router,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private checkersService: CheckersService,
+              private signonService: SignonService) {}
 
   ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      console.log('gameId: ', params);
+      if (params['gameId']) {
+        this.gameId = params['gameId'];
+        this.selectedMatchType = VS.ONLINE;
+        this.startMenu = false;
+        this.startGame(this.gameId);
+      }
+    });
+    if (this.signonService.getSignedInUser()) {
+      this.availableMatchTypes.push(VS.ONLINE);
+    }
   }
 
-  startGame(): void {
+  startGame(gameId?: number): void {
     this.startMenu = false;
     this.gameOver = false;
     this.changeDetector.detectChanges();
@@ -54,7 +78,23 @@ export class CheckersComponent implements OnInit {
         }
       });
     });
-    this.board = new Board(this.selectedMatchType, new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
+    this.user = this.signonService.getSignedInUser();
+    this.board = new Board(this.selectedMatchType,
+      new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
+    if (gameId) {
+      this.board.onlineNextTurn.subscribe(checkersGameState => {
+        console.log(checkersGameState);
+        const game: Game = {
+          gameId: this.gameId,
+          players: [],
+          currentGameState: JSON.stringify(checkersGameState)
+        };
+
+        this.checkersService.updateGame(game);
+      });
+      this.pollData();
+    }
+      // gameId, user);
     this.board.gameOver.subscribe((res) => {
       this.startMenu = true;
       this.gameOver = true;
@@ -100,9 +140,36 @@ export class CheckersComponent implements OnInit {
 
   gameTypeSelect (): void {
     this.startDisabled = (this.selectedMatchType === VS.ONLINE);
-    if (this.startDisabled) {
+    if (this.startDisabled && this.signonService.getSignedInUser()) {
       this.router.navigate(['.', 'lobby'], {relativeTo: this.route});
     }
   }
 
+  onlineMove (moves: PotentialMove[]) {
+    const move = moves.shift();
+    if (move) {
+      this.board.selectedSquare = move.sourceSquare;
+      this.board.movePiece(move.destinationSquare);
+      window.setTimeout(() => {
+        this.onlineMove(moves);
+      }, 400);
+    }
+  }
+
+  pollData(): void {
+    this.checkersService.getGame(this.gameId).subscribe(game => {
+      if (this.user.userName === game.players[0]) {
+        this.board.playerShade = Shade.DARK;
+      } else {
+        this.board.playerShade = Shade.LIGHT;
+      }
+      const state: CheckersGameState = JSON.parse(game.currentGameState);
+      if (state && state.updatingShade !== this.board.playerShade) {
+        this.board.restoreOnlineState(state);
+      }
+      window.setTimeout(() => {
+        this.pollData();
+      }, 500);
+    })
+  }
 }
