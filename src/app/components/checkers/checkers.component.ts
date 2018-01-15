@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {Board} from "../../drawable/checkers/board";
 import {Vec2} from "../../util/types/vec2";
 import {VS} from "../../util/enums/vs";
@@ -20,7 +20,7 @@ import {Game} from "../../util/types/game";
   styleUrls: ['./checkers.component.css']
 })
 
-export class CheckersComponent implements OnInit {
+export class CheckersComponent implements OnInit, OnDestroy {
   @ViewChild('confirm')
   confirm: ConfirmComponent;
   @ViewChild('canvas')
@@ -41,7 +41,8 @@ export class CheckersComponent implements OnInit {
     VS.PLAYER_LOCAL,
   ];
   selectedMatchType: VS = VS.COMPUTER;
-  onlineNextTurn: Observable<any>
+  onlineNextTurn: Observable<any>;
+  pollTimer: any;
 
   constructor(private changeDetector: ChangeDetectorRef,
               private router: Router,
@@ -64,6 +65,10 @@ export class CheckersComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    window.clearInterval(this.pollTimer);
+  }
+
   startGame(gameId?: number): void {
     this.startMenu = false;
     this.gameOver = false;
@@ -83,7 +88,7 @@ export class CheckersComponent implements OnInit {
       new Vec2(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight));
     if (gameId) {
       this.board.onlineNextTurn.subscribe(checkersGameState => {
-        console.log(checkersGameState);
+        window.clearInterval(this.pollTimer);
         const game: Game = {
           gameId: this.gameId,
           players: [],
@@ -91,8 +96,10 @@ export class CheckersComponent implements OnInit {
         };
 
         this.checkersService.updateGame(game);
+        this.board.pauseWhileMakingMove = false;
+        this.pollTimer = window.setInterval(() => { this.pollData(); }, 500);
       });
-      this.pollData();
+      this.pollTimer = window.setInterval(() => { this.pollData(); }, 500);
     }
       // gameId, user);
     this.board.gameOver.subscribe((res) => {
@@ -164,12 +171,10 @@ export class CheckersComponent implements OnInit {
         this.board.playerShade = Shade.LIGHT;
       }
       const state: CheckersGameState = JSON.parse(game.currentGameState);
-      if (state && state.updatingShade !== this.board.playerShade) {
+      // if (state && state.updatingShade !== this.board.playerShade) {
+      if (state) {
         this.board.restoreOnlineState(state);
       }
-      window.setTimeout(() => {
-        this.pollData();
-      }, 500);
-    })
+    });
   }
 }

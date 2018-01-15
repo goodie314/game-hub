@@ -29,6 +29,7 @@ export class Board {
   playerShade: Shade = Shade.DARK;
   lastMove: PotentialMove[] = [];
   onlineNextTurn: EventEmitter<CheckersGameState> = new EventEmitter();
+  pauseWhileMakingMove = false;
 
   constructor(matchType: VS, canvasDimensions: Vec2) {
     this.matchType = matchType;
@@ -241,6 +242,7 @@ export class Board {
   }
 
   movePiece (selectedSquare: BoardSquare) {
+    this.pauseWhileMakingMove = true;
     for (const move of this.potentialMoves) {
       if (move.destinationSquare.equals(selectedSquare)) {
         const piece = move.sourceSquare.checkersPiece;
@@ -385,8 +387,11 @@ export class Board {
     }
   }
 
-  restoreOnlineState(checkersGameState: CheckersGameState) {
+  restoreOnlineState(checkersGameState: CheckersGameState): void {
     const squares = checkersGameState.boardSquares;
+    if (this.requiredMove || this.pauseWhileMakingMove) {
+      return;
+    }
     this.darkTurn = checkersGameState.darkTurn;
     if (this.darkTurn) {
       this.darkPieceContainer.highlight = false;
@@ -403,6 +408,7 @@ export class Board {
       const oldPiece = squares[i].checkersPiece;
       if (oldPiece) {
         square.checkersPiece = new CheckersPiece(oldPiece.color, oldPiece.pos, oldPiece.radius, oldPiece.shade);
+        square.checkersPiece.king = oldPiece.king;
         square.checkersPiece.resize(square.middlePos, (square.squareDim / 2) * .75);
         this.pieces.push(square.checkersPiece);
       } else {
