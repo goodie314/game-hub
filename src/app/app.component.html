@@ -2,6 +2,7 @@
   <div class="row header">
     <p style="flex: 1 1 auto">Game Hub</p>
     <button class="btn btn-default signon" routerLink="signon" *ngIf="!user">Sign in</button>
+    <button class="btn btn-default signon" routerLink="signon" *ngIf="user" (click)="signOut()">Sign out</button>
   </div>
   <div class="row navigation">
     <a routerLink="/">Checkers</a>

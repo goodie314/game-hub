@@ -16,10 +16,15 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.signonService.getSignonEvent().subscribe((user) => {
       this.user = user;
-      console.log('user changed to: ', user);
-    })
+    });
+    this.user = this.signonService.getSignedInUser();
   }
 
   constructor(private signonService: SignonService) {
+  }
+
+  private signOut(): void {
+    this.user = null;
+    this.signonService.setSignedInUser(null);
   }
 }

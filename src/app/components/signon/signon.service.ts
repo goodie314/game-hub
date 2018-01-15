@@ -9,6 +9,7 @@ export class SignonService {
 
   private signedInUser: User;
   private signInEvent: EventEmitter<User> = new EventEmitter();
+  private userStorageKey = 'user';
 
   constructor(private http: HttpClient) {
   }
@@ -38,10 +39,14 @@ export class SignonService {
   }
 
   public getSignedInUser(): User {
+    if (!this.signedInUser) {
+      this.signedInUser = JSON.parse(window.localStorage.getItem(this.userStorageKey));
+    }
     return this.signedInUser;
   }
 
   public setSignedInUser(user: User): void {
+    window.localStorage.setItem(this.userStorageKey, JSON.stringify(user));
     this.signedInUser = user;
   }
 
