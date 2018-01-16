@@ -7,12 +7,11 @@ import {ExitButton} from "../../drawable/checkers/exit-button";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CheckersService} from "./checkers.service";
 import {SignonService} from "../signon/signon.service";
-import {PotentialMove} from "../../util/types/potential-move";
-import {CheckersGameState} from "../../util/types/checkers-game-state";
 import {User} from "../../util/types/user";
 import {Shade} from "../../util/enums/shade";
-import {Observable} from "rxjs/Observable";
 import {Game} from "../../util/types/game";
+import {PotentialMove} from "../../util/types/checkers/potential-move";
+import {CheckersGameState} from "../../util/types/checkers/checkers-game-state";
 
 @Component({
   selector: 'checkers',

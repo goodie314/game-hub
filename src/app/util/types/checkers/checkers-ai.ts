@@ -1,6 +1,6 @@
-import {Shade} from "../enums/shade";
-import {Board} from "../../drawable/checkers/board";
 import {PotentialMove} from "./potential-move";
+import {Shade} from "../../enums/shade";
+import {Board} from "../../../drawable/checkers/board";
 
 export class CheckersAI {
   playerShade: Shade;

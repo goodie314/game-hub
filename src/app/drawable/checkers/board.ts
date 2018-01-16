@@ -3,12 +3,13 @@ import {BoardSquare} from "./board-square";
 import {Shade} from "../../util/enums/shade";
 import {CheckersPiece} from "./checkers-piece";
 import {Color} from "../../util/enums/color";
-import {PotentialMove} from "../../util/types/potential-move";
-import {CapturedPieceContainer} from "./captured-piece-container";
-import {CheckersAI} from "../../util/types/checkers-ai";
 import {VS} from "../../util/enums/vs";
+import {PotentialMove} from "../../util/types/checkers/potential-move";
+import {CapturedPieceContainer} from "./captured-piece-container";
 import {EventEmitter} from "@angular/core";
-import {CheckersGameState} from "../../util/types/checkers-game-state";
+import {CheckersAI} from "../../util/types/checkers/checkers-ai";
+import {CheckersGameState} from "../../util/types/checkers/checkers-game-state";
+
 
 export class Board {
   matchType: VS;

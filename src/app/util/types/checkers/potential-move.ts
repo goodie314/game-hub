@@ -1,4 +1,4 @@
-import {BoardSquare} from "../../drawable/checkers/board-square";
+import {BoardSquare} from "../../../drawable/checkers/board-square";
 
 export class PotentialMove {
   sourceSquare: BoardSquare;
