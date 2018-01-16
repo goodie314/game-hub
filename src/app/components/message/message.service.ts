@@ -3,15 +3,25 @@ import {Message} from "./message";
 
 @Injectable()
 export class MessageService {
-  private errorListener: EventEmitter<Message> = new EventEmitter();
+  private messageListener: EventEmitter<Message> = new EventEmitter();
 
-  public listenForError(): EventEmitter<Message> {
-    return this.errorListener;
+  public listenForMessage(): EventEmitter<Message> {
+    return this.messageListener;
   }
 
   public error(title: string, message?: string, timeOut?: number): void {
-    this.errorListener.emit({
+    this.messageListener.emit({
       title: title,
+      type: 'error',
+      message: message,
+      timeOut: timeOut
+    });
+  }
+
+  public success(title: string, message?: string, timeOut?: number): void {
+    this.messageListener.emit({
+      title: title,
+      type: 'success',
       message: message,
       timeOut: timeOut
     });

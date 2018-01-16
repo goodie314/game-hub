@@ -11,16 +11,16 @@ import {Message} from "./message";
 export class MessageComponent implements OnInit {
   messageQueue: Message[] = [];
   message: Message;
-  errorTimeout: any;
+  messageTimeout: any;
   loadingBarInterval: any;
 
   ngOnInit(): void {
-    this.messageService.listenForError().subscribe((message) => {
+    this.messageService.listenForMessage().subscribe((message) => {
       if (this.messageQueue.length || this.message) {
         this.messageQueue.push(message);
       } else {
         this.messageQueue.push(message);
-        this.displayError();
+        this.displayMessage();
       }
     });
   }
@@ -29,27 +29,29 @@ export class MessageComponent implements OnInit {
               private changeDetector: ChangeDetectorRef) {
   }
 
-  private displayError(): void {
+  private displayMessage(): void {
     this.message = this.messageQueue.shift();
+    this.changeDetector.detectChanges();
+    const container = document.getElementById('container');
     if (this.message) {
       this.updateProgressBar(this.message.timeOut ? this.message.timeOut : 5000);
-      this.errorTimeout = window.setTimeout(() => {
-        this.displayError();
+      container.classList.add(this.message.type);
+      this.messageTimeout = window.setTimeout(() => {
+        this.displayMessage();
       }, this.message.timeOut ? this.message.timeOut : 5000);
-    } else {
-      this.message = null;
     }
   }
 
-  private dismissAllErrors(): void {
+  private dismissAllMessages(): void {
     this.messageQueue = [];
     this.message = null;
-    window.clearTimeout(this.errorTimeout);
+    window.clearTimeout(this.messageTimeout);
+    window.clearInterval(this.loadingBarInterval);
   }
 
   private updateProgressBar(time: number): void {
-    this.changeDetector.detectChanges();
     const bar = document.getElementById('loadingBar');
+    bar.classList.add(`${this.message.type}-bar`);
     let width = 1;
     this.loadingBarInterval = window.setInterval(() => {
       if (width >= 100) {

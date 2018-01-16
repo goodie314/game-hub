@@ -1,7 +1,9 @@
-<div class="error" *ngIf="message" (click)="dismissAllErrors()">
-  <p>{{message.title}}</p>
-  <p>{{message.message}}</p>
+<div id="container" *ngIf="message" (click)="dismissAllMessages()">
+  <div>
+    <p>{{message.title}}</p>
+    <p>{{message.message}}</p>
+  </div>
   <div id="progress">
-    <div #loadingBar id="loadingBar"></div>
+    <div id="loadingBar"></div>
   </div>
 </div>

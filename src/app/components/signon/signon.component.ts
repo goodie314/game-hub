@@ -31,8 +31,7 @@ export class SignonComponent {
             this.signonService.signonSuccessful(user);
             this.router.navigate([''], {relativeTo: this.route});
           }
-        },
-        (err) => {
+        }, (err) => {
           this.messageService.error('Sign In', 'Error signing in to account');
         });
     }
@@ -46,7 +45,9 @@ export class SignonComponent {
             this.signonService.signonSuccessful(user);
             this.router.navigate([''], {relativeTo: this.route});
           }
-        })
+        }, () => {
+          this.messageService.error('Sign Up', 'Error signing up for account');
+        });
     }
   }
 }
