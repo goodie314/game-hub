@@ -1,0 +1,7 @@
+<div class="error" *ngIf="message" (click)="dismissAllErrors()">
+  <p>{{message.title}}</p>
+  <p>{{message.message}}</p>
+  <div id="progress">
+    <div #loadingBar id="loadingBar"></div>
+  </div>
+</div>

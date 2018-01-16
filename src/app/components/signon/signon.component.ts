@@ -5,6 +5,7 @@ import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppComponent} from "../../app.component";
 import {User} from "../../util/types/user";
+import {MessageService} from "../message/message.service";
 
 @Component({
   selector: 'signon',
@@ -18,7 +19,8 @@ export class SignonComponent {
 
   constructor (private signonService: SignonService,
                private router: Router,
-               private route: ActivatedRoute) {
+               private route: ActivatedRoute,
+               private messageService: MessageService) {
   }
 
   private signIn(): void {
@@ -29,6 +31,9 @@ export class SignonComponent {
             this.signonService.signonSuccessful(user);
             this.router.navigate([''], {relativeTo: this.route});
           }
+        },
+        (err) => {
+          this.messageService.error('Sign In', 'Error signing in to account');
         });
     }
   }

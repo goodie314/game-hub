@@ -9,10 +9,11 @@ export class MessageService {
     return this.errorListener;
   }
 
-  public error(title: string, message?: string): void {
+  public error(title: string, message?: string, timeOut?: number): void {
     this.errorListener.emit({
       title: title,
-      message: message
+      message: message,
+      timeOut: timeOut
     });
   }
 

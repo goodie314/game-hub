@@ -1,0 +1,24 @@
+.error {
+  background-color: rgb(255, 84, 78);
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.error:hover {
+  cursor: pointer;
+}
+
+#progress {
+  width: 100%;
+  background-color: grey;
+}
+
+#loadingBar {
+  width: 1%;
+  height: 15px;
+  background-color: #00ff00;
+}
