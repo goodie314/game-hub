@@ -39,6 +39,8 @@ export class MessageComponent implements OnInit {
       this.messageTimeout = window.setTimeout(() => {
         this.displayMessage();
       }, this.message.timeOut ? this.message.timeOut : 5000);
+    } else {
+      window.clearInterval(this.loadingBarInterval);
     }
   }
 

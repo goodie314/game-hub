@@ -34,6 +34,8 @@ export class SignonComponent {
         }, (err) => {
           this.messageService.error('Sign In', 'Error signing in to account');
         });
+    } else {
+      this.messageService.error('Sign In', 'User name and password fields must not be empty');
     }
   }
 
@@ -48,6 +50,8 @@ export class SignonComponent {
         }, () => {
           this.messageService.error('Sign Up', 'Error signing up for account');
         });
+    } else {
+      this.messageService.error('Sign Up', 'User name and password fields must not be empty');
     }
   }
 }

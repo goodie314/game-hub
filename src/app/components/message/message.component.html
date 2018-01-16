@@ -1,6 +1,7 @@
 <div id="container" *ngIf="message" (click)="dismissAllMessages()">
+  <button class="ion-md-close"></button>
   <div>
-    <p>{{message.title}}</p>
+    <h3>{{message.title}}</h3>
     <p>{{message.message}}</p>
   </div>
   <div id="progress">

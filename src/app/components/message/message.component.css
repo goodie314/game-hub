@@ -1,10 +1,17 @@
 #container {
+  width: 15%;
   position: fixed;
   right: 10px;
   top: 10px;
   border: 3px solid black;
   border-radius: 5px;
   padding: 15px;
+}
+
+.ion-md-close {
+  color: red;
+  position: fixed;
+  right: 15px;
 }
 
 .error {
