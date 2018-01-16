@@ -41,7 +41,6 @@ export class CheckersComponent implements OnInit, OnDestroy {
     VS.PLAYER_LOCAL,
   ];
   selectedMatchType: VS = VS.COMPUTER;
-  onlineNextTurn: Observable<any>;
   pollTimer: any;
 
   constructor(private changeDetector: ChangeDetectorRef,
@@ -79,7 +78,13 @@ export class CheckersComponent implements OnInit, OnDestroy {
         if (res) {
           this.startMenu = true;
           this.gameOver = true;
+          this.selectedMatchType = VS.COMPUTER;
           this.gameOverMessage = null;
+          if (gameId) {
+            this.router.navigate(['/', 'checkers', 'lobby'], {relativeTo: this.route});
+          } else {
+            this.router.navigate(['/', 'checkers'], {relativeTo: this.route});
+          }
         }
       });
     });
@@ -99,13 +104,14 @@ export class CheckersComponent implements OnInit, OnDestroy {
         this.board.pauseWhileMakingMove = false;
         this.pollTimer = window.setInterval(() => { this.pollData(); }, 500);
       });
+      this.pollData();
       this.pollTimer = window.setInterval(() => { this.pollData(); }, 500);
     }
-      // gameId, user);
     this.board.gameOver.subscribe((res) => {
       this.startMenu = true;
       this.gameOver = true;
       this.gameOverMessage = res;
+      this.selectedMatchType = VS.COMPUTER;
     });
     this.resize();
     this.draw();
@@ -171,7 +177,6 @@ export class CheckersComponent implements OnInit, OnDestroy {
         this.board.playerShade = Shade.LIGHT;
       }
       const state: CheckersGameState = JSON.parse(game.currentGameState);
-      // if (state && state.updatingShade !== this.board.playerShade) {
       if (state) {
         this.board.restoreOnlineState(state);
       }

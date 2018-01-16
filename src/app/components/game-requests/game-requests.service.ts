@@ -26,6 +26,14 @@ export class GameRequestsService {
       {headers: this.headers()});
   }
 
+  public deleteGame(game: Game): void {
+    this.http.delete(`${environment.gameHubServiceUrl}/game/${game.gameId}`).subscribe();
+  }
+
+  public declineRequest(request: GameRequest): void {
+    this.http.post(`${environment.gameHubServiceUrl}/game-request/decline/${request.gameRequestId}`, null).subscribe();
+  }
+
   private headers(): HttpHeaders {
     const headers: HttpHeaders = new HttpHeaders();
     headers.append('Accept', 'application/json');

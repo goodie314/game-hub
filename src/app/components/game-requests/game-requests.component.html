@@ -1,41 +1,47 @@
-<div>
-  Game requests
-  <table>
-    <tr>
-      <td>Game</td>
-      <td>Requested On</td>
-      <td>Requester</td>
-      <td>Accept</td>
-    </tr>
-    <tr *ngFor="let request of activeGameRequests">
-      <td>{{request.game}}</td>
-      <td>{{request.creationDate}}</td>
-      <td>{{request.requester}}</td>
-      <td><button class="btn btn-default" (click)="acceptRequest(request)">Accept</button></td>
-    </tr>
-  </table>
-  Active Games
-  <table>
-    <tr>
-      <td></td>
-    </tr>
-    <tr *ngFor="let game of activeGames">
-      <td>{{game.gameId}}</td>
-      <td>
-        <ul>
-          <li *ngFor="let opponent of game.players">
-            {{opponent}}
-          </li>
-        </ul>
-      </td>
-      <td>
-        <button class="btn btn-default" (click)="openGame(game)">Open</button>
-      </td>
-    </tr>
-  </table>
-  <!--<ul>-->
-    <!--<li *ngFor="let request of activeGameRequests">-->
-      <!--{{request.game}} - {{request.requester}} <button (click)="acceptRequest(request)">Accept</button>-->
-    <!--</li>-->
-  <!--</ul>-->
+<div style="height: 100%">
+  <p>Game requests</p>
+  <div class="row container">
+    <div class="row">
+      <table>
+        <tr>
+          <td>Game</td>
+          <td>Requested On</td>
+          <td>Requester</td>
+          <td>Accept</td>
+          <td>Decline</td>
+        </tr>
+        <tr *ngFor="let request of activeGameRequests">
+          <td>{{request.game}}</td>
+          <td>{{request.creationDate | date:'shortDate'}}</td>
+          <td>{{request.requester}}</td>
+          <td><button class="btn btn-default" (click)="acceptRequest(request)">Accept</button></td>
+          <td><button class="btn btn-default" (click)="declineRequest(request)">Decline</button></td>
+        </tr>
+      </table>
+    </div>
+    <div class="row">
+      <table>
+        <tr>
+          <td>Game Id</td>
+          <td>Players</td>
+          <td>Open</td>
+          <td>Delete</td>
+        </tr>
+        <tr *ngFor="let game of activeGames">
+          <td>{{game.gameId}}</td>
+          <td>
+              <p *ngFor="let opponent of game.players">
+                {{opponent}}
+              </p>
+          </td>
+          <td>
+            <button class="btn btn-default" (click)="openGame(game)">Open</button>
+          </td>
+          <td>
+            <button class="btn btn-default ion-md-close" (click)="deleteGame(game)"></button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>

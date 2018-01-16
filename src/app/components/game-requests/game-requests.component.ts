@@ -69,7 +69,21 @@ export class GameRequestsComponent implements OnInit, OnDestroy {
     });
   }
 
+  private declineRequest(request: GameRequest): void {
+    this.gameRequestsService.declineRequest(request);
+    this.activeGameRequests = this.activeGameRequests.filter((r) => {
+      return r.gameRequestId !== request.gameRequestId;
+    })
+  }
+
   private openGame(game: Game): void {
     this.router.navigate(['..', game.gameId], {relativeTo: this.route});
+  }
+
+  private deleteGame(game: Game): void {
+    this.gameRequestsService.deleteGame(game);
+    this.activeGames = this.activeGames.filter((g) => {
+      return g.gameId !== game.gameId;
+    });
   }
 }

@@ -23,9 +23,12 @@ export class UserAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const user = this.signonService.getSignedInUser();
     this.userAddService.getUsers()
       .subscribe((users) => {
-        this.users = users;
+        this.users = users.filter((u) => {
+          return u.userName !== user.userName;
+        });
       });
   }
 
@@ -38,13 +41,13 @@ export class UserAddComponent implements OnInit {
       return;
     }
     const gameRequest: GameRequest = {
+      gameRequestId: null,
       game: this.game,
       requester: user.userName,
       invitees: invitees,
       creationDate: new Date()
     };
     this.userAddService.makeRequest(gameRequest).subscribe(() => {
-      console.log('made request');
     });
   }
 }
