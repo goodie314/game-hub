@@ -1,9 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {ChessPiece} from "../../drawable/chess/piece/chess-piece";
-import {Pawn} from "../../drawable/chess/piece/pawn";
-import {Vec2} from "../../util/types/vec2";
-import {Color} from "../../util/enums/color";
-import {Shade} from "../../util/enums/shade";
+import {ChessService} from "./chess.service";
+import {Chess} from "../../util/types/chess/chess";
+import {LocalChessPlayer} from "../../util/types/chess/local-chess-player";
+import {ChessPlayer} from "../../util/types/chess/chess-player";
 
 @Component({
   selector: 'chess',
@@ -12,9 +11,13 @@ import {Shade} from "../../util/enums/shade";
 })
 
 export class ChessComponent implements OnInit {
+  private chess: Chess;
+
+  constructor(private chessService: ChessService) {
+  }
 
   ngOnInit(): void {
-    const piece: ChessPiece = new Pawn(new Vec2(0, 0), Color.BLACK, Shade.DARK);
-    piece.draw(null);
+    const players: ChessPlayer[] = [new LocalChessPlayer(), new LocalChessPlayer()];
+    this.chess = new Chess(players);
   }
 }
