@@ -12,6 +12,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MessageModule} from "./components/message/message.module";
 import {LobbyModule} from "./components/lobby/lobby.module";
 import {GameRequestsModule} from "./components/game-requests/game-requests.module";
+import {ChessModule} from "./components/chess/chess.module";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {GameRequestsModule} from "./components/game-requests/game-requests.modul
     BrowserModule,
     BrowserAnimationsModule,
     CheckersModule,
+    ChessModule,
     HttpClientModule,
     LobbyModule,
     MessageModule,
