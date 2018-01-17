@@ -44,7 +44,7 @@ export class ChessBoard {
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         const squarePos = new Vec2(x * squareDim + this.topLeft.x, y * squareDim + this.topLeft.y);
-        const square = new ChessBoardSquare(x * (y + 1), squarePos, squareDim, squareColor);
+        const square = new ChessBoardSquare(x, y, squarePos, squareDim, squareColor);
         this.boardSquares.push(square);
         switch (squareColor) {
           case Color.BLACK:
@@ -85,7 +85,7 @@ export class ChessBoard {
     ctx.fillRect(this.topLeft.x, this.topLeft.y, this.width, this.height);
     this.boardSquares.forEach(square => {
       square.draw(ctx);
-    })
+    });
   }
 
   public getSquares(): ChessBoardSquare[] {

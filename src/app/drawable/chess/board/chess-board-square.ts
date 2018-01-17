@@ -2,15 +2,17 @@ import {Vec2} from "../../../util/types/vec2";
 import {Color} from "../../../util/enums/color";
 
 export class ChessBoardSquare {
-  private squareIndex: number;
+  private boardX: number;
+  private boardY: number;
   private topLeftPos: Vec2;
   private squareDim: number;
   private middlePos: Vec2;
   private squareColor: string;
   private highlight: boolean;
 
-  constructor (squareIndex: number, topLeftPos: Vec2, squareDim: number, squareColor: Color) {
-    this.squareIndex = squareIndex;
+  constructor (boardX: number, boardY: number, topLeftPos: Vec2, squareDim: number, squareColor: Color) {
+    this.boardX = boardX;
+    this.boardY = boardY;
     this.topLeftPos = topLeftPos;
     this.squareDim = squareDim;
     this.middlePos = new Vec2(topLeftPos.x + (squareDim / 2), topLeftPos.y + (squareDim / 2));
@@ -39,6 +41,22 @@ export class ChessBoardSquare {
 
   public getSquareDimension(): number {
     return this.squareDim;
+  }
+
+  public getSquareIndex(): number {
+    return this.boardX + (this.boardY * 8);
+  }
+
+  public getBoardX(): number {
+    return this.boardX;
+  }
+
+  public getBoardY(): number {
+    return this.boardY;
+  }
+
+  public setHighlight(highlight: boolean): void {
+    this.highlight = highlight;
   }
 
   public contains (x: number, y: number) {

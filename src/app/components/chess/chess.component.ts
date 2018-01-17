@@ -6,6 +6,7 @@ import {ChessPlayer} from "../../util/types/chess/chess-player";
 import {ConfirmComponent} from "../confirm/confirm.component";
 import {VS} from "../../util/enums/vs";
 import {Vec2} from "../../util/types/vec2";
+import {Shade} from "../../util/enums/shade";
 
 @Component({
   selector: 'chess',
@@ -29,7 +30,7 @@ export class ChessComponent implements OnInit {
     VS.COMPUTER,
     VS.PLAYER_LOCAL,
   ];
-  selectedMatchType: VS = VS.COMPUTER;
+  selectedMatchType: VS = VS.PLAYER_LOCAL;
 
   constructor(private chessService: ChessService) {
   }
@@ -39,10 +40,10 @@ export class ChessComponent implements OnInit {
   }
 
   private startGame(): void {
-    const players: ChessPlayer[] = [new LocalChessPlayer()];
-    switch(this.selectedMatchType) {
+    const players: ChessPlayer[] = [new LocalChessPlayer(Shade.DARK)];
+    switch (this.selectedMatchType) {
       case VS.PLAYER_LOCAL:
-        players.push(new LocalChessPlayer());
+        players.push(new LocalChessPlayer(Shade.LIGHT));
         break;
     }
     this.chess = new Chess(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight, players);
