@@ -13,7 +13,7 @@ export class LocalChessPlayer extends ChessPlayer {
     super(shade);
   }
 
-  public clickHandler(chess: Chess, square: ChessBoardSquare, piece?: ChessPiece): void {
+  public clickHandler(square: ChessBoardSquare, piece?: ChessPiece): void {
     if (!this.myTurn) {
       return;
     }
@@ -21,7 +21,7 @@ export class LocalChessPlayer extends ChessPlayer {
       this.highlightMoves(false);
       for (const move of this.moves) {
         if (square.equals(move.destinationSquare)) {
-          this.takeTurn(chess, move);
+          this.takeTurn(move);
           this.moves = [];
           return;
         }
@@ -30,7 +30,7 @@ export class LocalChessPlayer extends ChessPlayer {
     }
 
     if (piece && piece.getShade() === this.shade) {
-      this.moves = piece.getPotentialMoves(chess);
+      this.moves = piece.getPotentialMoves(this.chess);
       this.highlightMoves(true);
     }
   }

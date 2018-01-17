@@ -48,8 +48,10 @@ export class ChessPiece {
   }
 
   public removeFromBoard(): void {
-    this.boardSquare = null;
+    this.boardSquare = new ChessBoardSquare(-1, -1, new Vec2(0, 0), 0, Color.BLACK);
     this.location = new Vec2(0, 0);
+    // this.location = null;
+    // this.boardSquare = null;
   }
 
   public getBoardSquare(): ChessBoardSquare {

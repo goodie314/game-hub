@@ -28,7 +28,7 @@ export class Chess {
     this.chessPieces = this.setupPieces();
     this.darkPlayer = players[0];
     this.lightPlayer = players[1];
-    this.darkPlayer.yourTurn();
+    this.darkPlayer.yourTurn(this);
   }
 
   // set pieces in their starting positions
@@ -106,7 +106,7 @@ export class Chess {
         }
       }
     }
-    this.players.forEach(player => { player.clickHandler(this, square, piece); });
+    this.players.forEach(player => { player.clickHandler(square, piece); });
   }
 
   // returns a board square a certain number of hops away from the piece given
@@ -190,7 +190,7 @@ export class Chess {
     });
   }
 
-  public removePieceFromBoard(piece: ChessPiece) {
+  public removePieceFromBoard(piece: ChessPiece): void {
     this.chessPieces = this.chessPieces.filter(p => {
       return !piece.equals(p);
     });
@@ -201,9 +201,13 @@ export class Chess {
     this.darkTurn = !this.darkTurn;
 
     if (this.darkTurn) {
-      this.darkPlayer.yourTurn();
+      this.darkPlayer.yourTurn(this);
     } else {
-      this.lightPlayer.yourTurn();
+      this.lightPlayer.yourTurn(this);
     }
+  }
+
+  public getChessPieces(): ChessPiece[] {
+    return this.chessPieces;
   }
 }

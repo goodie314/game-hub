@@ -7,6 +7,7 @@ import {ConfirmComponent} from "../confirm/confirm.component";
 import {VS} from "../../util/enums/vs";
 import {Vec2} from "../../util/types/vec2";
 import {Shade} from "../../util/enums/shade";
+import {ComputerChessPlayer} from "../../util/types/chess/computer-chess-player";
 
 @Component({
   selector: 'chess',
@@ -30,7 +31,7 @@ export class ChessComponent implements OnInit {
     VS.COMPUTER,
     VS.PLAYER_LOCAL,
   ];
-  selectedMatchType: VS = VS.PLAYER_LOCAL;
+  selectedMatchType: VS = VS.COMPUTER;
 
   constructor(private chessService: ChessService) {
   }
@@ -42,6 +43,9 @@ export class ChessComponent implements OnInit {
   private startGame(): void {
     const players: ChessPlayer[] = [new LocalChessPlayer(Shade.DARK)];
     switch (this.selectedMatchType) {
+      case VS.COMPUTER:
+        players.push(new ComputerChessPlayer(Shade.LIGHT));
+        break;
       case VS.PLAYER_LOCAL:
         players.push(new LocalChessPlayer(Shade.LIGHT));
         break;
