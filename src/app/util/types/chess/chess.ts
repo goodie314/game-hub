@@ -10,6 +10,7 @@ import {ChessBoardSquare} from "../../../drawable/chess/board/chess-board-square
 import {Rook} from "../../../drawable/chess/piece/rook";
 import {Knight} from "../../../drawable/chess/piece/knight";
 import {Bishop} from "../../../drawable/chess/piece/bishop";
+import {Queen} from "../../../drawable/chess/piece/queen";
 export class Chess {
 
   private chessBoard: ChessBoard;
@@ -45,6 +46,7 @@ export class Chess {
     pieces.push(new Rook(squares[0], pieceColor, pieceShade));
     pieces.push(new Knight(squares[1], pieceColor, pieceShade));
     pieces.push(new Bishop(squares[2], pieceColor, pieceShade));
+    pieces.push(new Queen(squares[3], pieceColor, pieceShade));
     pieces.push(new Bishop(squares[5], pieceColor, pieceShade));
     pieces.push(new Knight(squares[6], pieceColor, pieceShade));
     pieces.push(new Rook(squares[7], pieceColor, pieceShade));
@@ -61,6 +63,7 @@ export class Chess {
     pieces.push(new Rook(squares[56], pieceColor, pieceShade));
     pieces.push(new Knight(squares[57], pieceColor, pieceShade));
     pieces.push(new Bishop(squares[58], pieceColor, pieceShade));
+    pieces.push(new Queen(squares[59], pieceColor, pieceShade));
     pieces.push(new Bishop(squares[61], pieceColor, pieceShade));
     pieces.push(new Knight(squares[62], pieceColor, pieceShade));
     pieces.push(new Rook(squares[63], pieceColor, pieceShade));
