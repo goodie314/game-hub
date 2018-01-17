@@ -1,16 +1,22 @@
 import {ChessPiece} from "./chess-piece";
-import {Vec2} from "../../../util/types/vec2";
 import {Color} from "../../../util/enums/color";
 import {Shade} from "../../../util/enums/shade";
+import {ChessBoardSquare} from "../board/chess-board-square";
 
 export class Pawn extends ChessPiece {
 
-  constructor(location: Vec2, color: Color, shade: Shade) {
-    super(location, color, shade);
+  constructor(boardSquare: ChessBoardSquare, color: Color, shade: Shade) {
+    super(boardSquare, color, shade);
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    console.log('draw pawn');
-    super.draw(ctx);
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.fill();
+    ctx.strokeStyle = Color.RED;
+    ctx.strokeText('P', this.location.x, this.location.y);
+    ctx.closePath();
   }
 }

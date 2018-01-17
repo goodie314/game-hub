@@ -11,6 +11,7 @@ export class LocalChessPlayer extends ChessPlayer {
     if (!this.myTurn) {
       return;
     }
+    console.log(clickLocation);
   }
 
   public yourTurn(): void {
