@@ -8,6 +8,7 @@ import {Shade} from "../../enums/shade";
 import {BoardDirection} from "../../enums/board-direction";
 import {ChessBoardSquare} from "../../../drawable/chess/board/chess-board-square";
 import {Rook} from "../../../drawable/chess/piece/rook";
+import {Knight} from "../../../drawable/chess/piece/knight";
 export class Chess {
 
   private chessBoard: ChessBoard;
@@ -31,6 +32,7 @@ export class Chess {
   private setupPieces(): ChessPiece[] {
     const pieces: ChessPiece[] = [];
     const squares = this.chessBoard.getSquares();
+    // Set light colored pieces
     let pieceColor = Color.WHITE;
     let pieceShade = Shade.LIGHT;
 
@@ -40,8 +42,11 @@ export class Chess {
       pieces.push(piece);
     }
     pieces.push(new Rook(squares[0], pieceColor, pieceShade));
+    pieces.push(new Knight(squares[1], pieceColor, pieceShade));
+    pieces.push(new Knight(squares[6], pieceColor, pieceShade));
     pieces.push(new Rook(squares[7], pieceColor, pieceShade));
 
+    // Set dark colored pieces
     pieceColor = Color.BLACK;
     pieceShade = Shade.DARK;
 
@@ -51,6 +56,8 @@ export class Chess {
       pieces.push(piece);
     }
     pieces.push(new Rook(squares[56], pieceColor, pieceShade));
+    pieces.push(new Knight(squares[57], pieceColor, pieceShade));
+    pieces.push(new Knight(squares[62], pieceColor, pieceShade));
     pieces.push(new Rook(squares[63], pieceColor, pieceShade));
 
     return pieces;
@@ -92,13 +99,16 @@ export class Chess {
   }
 
   // returns a board square a certain number of hops away from the piece given
-  public getSquare(piece: ChessPiece, direction: BoardDirection, numberOfHops: number): ChessBoardSquare {
+  public getSquare(piece: ChessPiece, direction: BoardDirection, numberOfHops: number, fromSquare?: ChessBoardSquare): ChessBoardSquare {
     const getSquareIndex = (x: number, y: number) => {
       return x + (y * 8) ;
     };
-    const square = piece.getBoardSquare();
-    let boardX = square.getBoardX();
-    let boardY = square.getBoardY();
+    if (!fromSquare) {
+      fromSquare = piece.getBoardSquare();
+    }
+    // const square = piece.getBoardSquare();
+    let boardX = fromSquare.getBoardX();
+    let boardY = fromSquare.getBoardY();
     let multiplier = 0;
 
     const squares = this.chessBoard.getSquares();
