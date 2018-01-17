@@ -7,6 +7,7 @@ import {Pawn} from "../../../drawable/chess/piece/pawn";
 import {Shade} from "../../enums/shade";
 import {BoardDirection} from "../../enums/board-direction";
 import {ChessBoardSquare} from "../../../drawable/chess/board/chess-board-square";
+import {Rook} from "../../../drawable/chess/piece/rook";
 export class Chess {
 
   private chessBoard: ChessBoard;
@@ -38,8 +39,8 @@ export class Chess {
       const piece = new Pawn(square, pieceColor, pieceShade);
       pieces.push(piece);
     }
-    // pieces.push(new Pawn(squares[0], pieceColor, pieceShade));
-    // pieces.push(new Pawn(squares[7], pieceColor, pieceShade));
+    pieces.push(new Rook(squares[0], pieceColor, pieceShade));
+    pieces.push(new Rook(squares[7], pieceColor, pieceShade));
 
     pieceColor = Color.BLACK;
     pieceShade = Shade.DARK;
@@ -49,6 +50,8 @@ export class Chess {
       const piece = new Pawn(square, pieceColor, pieceShade);
       pieces.push(piece);
     }
+    pieces.push(new Rook(squares[56], pieceColor, pieceShade));
+    pieces.push(new Rook(squares[63], pieceColor, pieceShade));
 
     return pieces;
   }

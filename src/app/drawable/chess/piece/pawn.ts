@@ -67,24 +67,4 @@ export class Pawn extends ChessPiece {
 
     return moves;
   }
-
-  private getMoveToSquare(square: ChessBoardSquare, piece: ChessPiece): ChessMove {
-    if (!square) {
-      return null;
-    }
-    if (piece && piece.getShade() !== this.shade) {
-      return {
-        movingPiece: this,
-        destinationSquare: square,
-        capturedPiece: piece
-      };
-    } else if (!piece) {
-      return {
-        movingPiece: this,
-        destinationSquare: square
-      };
-    } else {
-      return null;
-    }
-  }
 }

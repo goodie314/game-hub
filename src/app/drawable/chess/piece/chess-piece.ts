@@ -14,7 +14,7 @@ export class ChessPiece {
   protected shade: Shade;
 
   private velocity: Vec2;
-  private speed = .1;
+  private speed = .05;
   private movementComplete: EventEmitter<any>;
 
   constructor(boardSquare: ChessBoardSquare, color: Color, shade: Shade) {
@@ -66,5 +66,25 @@ export class ChessPiece {
 
   public equals(piece: ChessPiece): boolean {
     return this.location === piece.location;
+  }
+
+  protected getMoveToSquare(square: ChessBoardSquare, piece: ChessPiece): ChessMove {
+    if (!square) {
+      return null;
+    }
+    if (piece && piece.getShade() !== this.shade) {
+      return {
+        movingPiece: this,
+        destinationSquare: square,
+        capturedPiece: piece
+      };
+    } else if (!piece) {
+      return {
+        movingPiece: this,
+        destinationSquare: square
+      };
+    } else {
+      return null;
+    }
   }
 }
