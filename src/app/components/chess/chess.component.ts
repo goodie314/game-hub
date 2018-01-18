@@ -13,6 +13,7 @@ import {User} from "../../util/types/user";
 import {MessageService} from "../message/message.service";
 import {GamesService} from "../../util/services/games.service";
 import {OnlineChessPlayer} from "../../util/types/chess/online-chess-player";
+import {ChessGameState} from "../../util/types/chess/chess-game-state";
 
 @Component({
   selector: 'chess',
@@ -87,12 +88,23 @@ export class ChessComponent implements OnInit {
     this.changeDetector.detectChanges();
     const userName = this.user.userName;
     this.gamesService.getGame(gameId).subscribe(game => {
+      let darkTurn = true;
+      if (game.currentGameState) {
+        const state: ChessGameState = JSON.parse(game.currentGameState);
+        if (state.lastPlayerToUpdate) {
+          if (game.players[0] === userName) {
+            darkTurn = state.lastPlayerToUpdate !== userName;
+          } else {
+            darkTurn = state.lastPlayerToUpdate === userName;
+          }
+        }
+      }
       const players: ChessPlayer[] = [
         new OnlineChessPlayer(Shade.DARK, gameId, userName, game.players[0] === userName, this.gamesService),
         new OnlineChessPlayer(Shade.LIGHT, gameId, userName, game.players[1] === userName, this.gamesService)
       ];
       const saveState = JSON.parse(game.currentGameState);
-      this.chess = new Chess(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight, players, saveState);
+      this.chess = new Chess(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight, players, saveState, darkTurn);
       this.chess.getGameOverHook().subscribe((gameOverMessage) => {
         this.messageService.success('Game Over', gameOverMessage, 1000 * 30);
         this.startMenu = true;

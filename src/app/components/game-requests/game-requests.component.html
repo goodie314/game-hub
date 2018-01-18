@@ -23,12 +23,14 @@
       <table>
         <tr>
           <td>Game Id</td>
+          <td>Game</td>
           <td>Players</td>
           <td>Open</td>
           <td>Delete</td>
         </tr>
         <tr *ngFor="let game of activeGames">
           <td>{{game.gameId}}</td>
+          <td>{{game.gameDescriptor}}</td>
           <td>
               <p *ngFor="let opponent of game.players">
                 {{opponent}}

@@ -21,8 +21,8 @@ export class GameRequestsService {
       {headers: this.headers()});
   }
 
-  public getActiveGames(userName: string): Observable<Game[]> {
-    return this.http.get<Game[]>(`${environment.gameHubServiceUrl}/game?userName=${userName}`,
+  public getActiveGames(gameDescription: string, userName: string): Observable<Game[]> {
+    return this.http.get<Game[]>(`${environment.gameHubServiceUrl}/game/${gameDescription}/${userName}`,
       {headers: this.headers()});
   }
 

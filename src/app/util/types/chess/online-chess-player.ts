@@ -8,6 +8,7 @@ import {Game} from "../game";
 import {ChessGameState} from "./chess-game-state";
 import {Chess} from "./chess";
 import {ChessMoveDto} from "./dto/chess-move-dto";
+import {ChessPieceDto} from "./dto/chess-piece-dto";
 
 export class OnlineChessPlayer extends ChessPlayer {
   private moves: ChessMove[] = [];
@@ -34,8 +35,12 @@ export class OnlineChessPlayer extends ChessPlayer {
   public takeTurn(move: ChessMove): void {
     // super.takeTurn(move);
     if (this.local) {
+      const sourceSquare = move.movingPiece.getBoardSquare();
+      move.movingPiece.setBoardSquare(move.destinationSquare);
+      const pieces: ChessPieceDto[] = this.chess.getChessPiecesAsDto();
+      move.movingPiece.setBoardSquare(sourceSquare);
       const gameState: ChessGameState = {
-        chessPieces: this.chess.getChessPiecesAsDto(),
+        chessPieces: pieces,
         lastMove: this.convertMoveToDto(move),
         lastPlayerToUpdate: this.userName
       };
@@ -72,7 +77,7 @@ export class OnlineChessPlayer extends ChessPlayer {
       window.setTimeout(() => {
         this.pollForUpdates();
       }, 500);
-    })
+    });
   }
 
   public clickHandler(square: ChessBoardSquare, piece?: ChessPiece): void {

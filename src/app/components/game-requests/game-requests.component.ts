@@ -49,16 +49,18 @@ export class GameRequestsComponent implements OnInit, OnDestroy {
         return true;
       }));
     });
-    this.gameRequestsService.getActiveGames(this.signonService.getSignedInUser().userName).subscribe(games => {
-      this.activeGames.push(...games.filter((game) => {
-        for (const g of this.activeGames) {
-          if (g.gameId === game.gameId) {
-            return false;
+    this.gameRequestsService.getActiveGames(this.game, this.signonService.getSignedInUser().userName).subscribe(games => {
+      if (games) {
+        this.activeGames.push(...games.filter((game) => {
+          for (const g of this.activeGames) {
+            if (g.gameId === game.gameId) {
+              return false;
+            }
           }
-        }
-        return true;
-      }))
-    })
+          return true;
+        }));
+      }
+    });
   }
 
   private acceptRequest(request: GameRequest): void {
@@ -73,7 +75,7 @@ export class GameRequestsComponent implements OnInit, OnDestroy {
     this.gameRequestsService.declineRequest(request);
     this.activeGameRequests = this.activeGameRequests.filter((r) => {
       return r.gameRequestId !== request.gameRequestId;
-    })
+    });
   }
 
   private openGame(game: Game): void {

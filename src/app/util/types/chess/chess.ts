@@ -30,7 +30,7 @@ export class Chess {
 
   private gameOverHook: EventEmitter<string> = new EventEmitter();
 
-  constructor(canvasWidth: number, canvasHeight: number, players: ChessPlayer[], saveState?: ChessGameState) {
+  constructor(canvasWidth: number, canvasHeight: number, players: ChessPlayer[], saveState?: ChessGameState, darkTurn = true) {
     this.players = players;
     this.chessBoard = new ChessBoard(canvasWidth, canvasHeight);
     if (saveState && saveState.chessPieces) {
@@ -40,7 +40,13 @@ export class Chess {
     }
     this.darkPlayer = players[0];
     this.lightPlayer = players[1];
-    this.darkPlayer.yourTurn(this);
+    if (darkTurn) {
+      this.darkPlayer.yourTurn(this);
+      this.darkTurn = true;
+    } else {
+      this.lightPlayer.yourTurn(this);
+      this.darkTurn = darkTurn;
+    }
   }
 
   // set pieces in their starting positions
