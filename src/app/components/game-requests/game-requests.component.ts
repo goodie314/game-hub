@@ -66,7 +66,7 @@ export class GameRequestsComponent implements OnInit, OnDestroy {
   private acceptRequest(request: GameRequest): void {
     this.gameRequestsService.acceptRequest(request).subscribe(game => {
       if (game) {
-        this.router.navigate(['..', game.gameId], {relativeTo: this.route})
+        this.router.navigate(['..', game.gameId], {relativeTo: this.route});
       }
     });
   }

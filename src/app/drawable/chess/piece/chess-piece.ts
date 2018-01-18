@@ -5,14 +5,7 @@ import {ChessBoardSquare} from "../board/chess-board-square";
 import {Chess} from "../../../util/types/chess/chess";
 import {ChessMove} from "../../../util/types/chess/chess-move";
 import {EventEmitter} from "@angular/core";
-import {ChessPieceDto} from "../../../util/types/chess/dto/chess-piece-dto";
 import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
-import {Bishop} from "./bishop";
-import {King} from "./king";
-import {Knight} from "./knight";
-import {Rook} from "./rook";
-import {Pawn} from "./pawn";
-import {Queen} from "./queen";
 
 export class ChessPiece {
 
@@ -22,6 +15,10 @@ export class ChessPiece {
   protected shade: Shade;
   protected value: number;
   protected type: ChessPieceEnum;
+
+  protected linePoints: Vec2[] = [];
+  protected curvePoints: Vec2[] = [];
+  protected pieceDimension = 10;
 
   private velocity: Vec2;
   private speed = .05;
@@ -61,8 +58,6 @@ export class ChessPiece {
   }
 
   public removeFromBoard(): void {
-    // this.boardSquare = new ChessBoardSquare(-1, -1, new Vec2(0, 0), 0, Color.BLACK);
-    // this.location = new Vec2(0, 0);
     this.location = null;
     this.boardSquare = null;
   }
@@ -117,5 +112,45 @@ export class ChessPiece {
     } else {
       return null;
     }
+  }
+
+  protected drawPoints(ctx: CanvasRenderingContext2D, outline = true) {
+    const scaleFactor = this.boardSquare.getSquareDimension() / this.pieceDimension;
+    ctx.fillStyle = this.color;
+    if (this.color === Color.WHITE) {
+      ctx.strokeStyle = Color.BLACK;
+    } else {
+      ctx.strokeStyle = Color.WHITE;
+    }
+    ctx.save();
+    ctx.translate(this.location.x, this.location.y);
+    ctx.scale(scaleFactor, scaleFactor);
+    if (this.shade === Shade.LIGHT) {
+      ctx.rotate(Math.PI);
+    }
+    ctx.beginPath();
+
+    if (this.linePoints.length) {
+      const start = this.linePoints[0];
+      ctx.moveTo(start.x, start.y);
+      for (const point of this.linePoints) {
+        ctx.lineTo(point.x, point.y);
+      }
+    }
+    if (this.curvePoints.length) {
+      for (let i = 0; i < this.curvePoints.length; i += 3) {
+        const start = this.curvePoints[i];
+        ctx.moveTo(start.x, start.y);
+        ctx.quadraticCurveTo(this.curvePoints[i + 1].x, this.curvePoints[i + 1].y, this.curvePoints[i + 2].x, this.curvePoints[i + 2].y);
+      }
+    }
+    if (outline) {
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.fill();
+    }
+    ctx.closePath();
+    ctx.restore();
   }
 }

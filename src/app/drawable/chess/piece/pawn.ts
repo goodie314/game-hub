@@ -6,6 +6,7 @@ import {Chess} from "../../../util/types/chess/chess";
 import {BoardDirection} from "../../../util/enums/board-direction";
 import {ChessMove} from "../../../util/types/chess/chess-move";
 import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
+import {Vec2} from "../../../util/types/vec2";
 
 export class Pawn extends ChessPiece {
   protected type = ChessPieceEnum.PAWN;
@@ -20,14 +21,37 @@ export class Pawn extends ChessPiece {
     if (!this.location || !this.boardSquare) {
       return;
     }
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill();
-    ctx.strokeStyle = Color.RED;
-    ctx.strokeText('P', this.location.x, this.location.y);
-    ctx.closePath();
+    this.pieceDimension = 40;
+    this.linePoints = [
+      new Vec2(-4, 0),
+      new Vec2(-10, 10),
+      new Vec2(10, 10),
+      new Vec2(4, 0)
+    ];
+    this.curvePoints = [
+      // top
+      new Vec2(-4, 0),
+      new Vec2(-6, -10),
+      new Vec2(0, -10),
+
+      new Vec2(0, -10),
+      new Vec2(6, -10),
+      new Vec2(4, 0),
+
+      // decoration
+      new Vec2(-4, 0),
+      new Vec2(0, 1),
+      new Vec2(4, 0)
+    ];
+    this.drawPoints(ctx);
+
+    this.linePoints = [
+      new Vec2(-4, 0),
+      new Vec2(0, -10),
+      new Vec2(4, 0)
+    ];
+    this.curvePoints = [];
+    this.drawPoints(ctx, false);
   }
 
   public getPotentialMoves(chess: Chess): ChessMove[] {

@@ -106,7 +106,7 @@ export class Chess {
 
   private getPieceFromDto(square: ChessBoardSquare, chessPieceDto: ChessPieceDto): ChessPiece {
     let piece: ChessPiece;
-    switch(chessPieceDto.type) {
+    switch (chessPieceDto.type) {
       case ChessPieceEnum.BISHOP:
         piece = new Bishop(square, chessPieceDto.color, chessPieceDto.shade);
         break;
