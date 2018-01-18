@@ -5,6 +5,14 @@ import {ChessBoardSquare} from "../board/chess-board-square";
 import {Chess} from "../../../util/types/chess/chess";
 import {ChessMove} from "../../../util/types/chess/chess-move";
 import {EventEmitter} from "@angular/core";
+import {ChessPieceDto} from "../../../util/types/chess/dto/chess-piece-dto";
+import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
+import {Bishop} from "./bishop";
+import {King} from "./king";
+import {Knight} from "./knight";
+import {Rook} from "./rook";
+import {Pawn} from "./pawn";
+import {Queen} from "./queen";
 
 export class ChessPiece {
 
@@ -13,6 +21,7 @@ export class ChessPiece {
   protected color: Color;
   protected shade: Shade;
   protected value: number;
+  protected type: ChessPieceEnum;
 
   private velocity: Vec2;
   private speed = .05;
@@ -70,12 +79,20 @@ export class ChessPiece {
     return this.shade;
   }
 
+  public getColor(): Color {
+    return this.color;
+  }
+
   public getPotentialMoves(chess: Chess): ChessMove[] {
     return [];
   }
 
   public getValue(): number {
     return this.value;
+  }
+
+  public getType(): ChessPieceEnum {
+    return this.type;
   }
 
   public equals(piece: ChessPiece): boolean {

@@ -14,6 +14,10 @@ import {Queen} from "../../../drawable/chess/piece/queen";
 import {King} from "../../../drawable/chess/piece/king";
 import {EventEmitter} from "@angular/core";
 import {ChessMove} from "./chess-move";
+import {ChessLocationDto} from "./dto/chess-location-dto";
+import {ChessPieceDto} from "./dto/chess-piece-dto";
+import {ChessGameState} from "./chess-game-state";
+import {ChessPieceEnum} from "../../enums/chess-pieces-enum";
 export class Chess {
 
   private chessBoard: ChessBoard;
@@ -26,10 +30,14 @@ export class Chess {
 
   private gameOverHook: EventEmitter<string> = new EventEmitter();
 
-  constructor(canvasWidth: number, canvasHeight: number, players: ChessPlayer[]) {
+  constructor(canvasWidth: number, canvasHeight: number, players: ChessPlayer[], saveState?: ChessGameState) {
     this.players = players;
     this.chessBoard = new ChessBoard(canvasWidth, canvasHeight);
-    this.chessPieces = this.setupPieces();
+    if (saveState && saveState.chessPieces) {
+      this.loadBoardState(saveState.chessPieces);
+    } else {
+      this.chessPieces = this.setupPieces();
+    }
     this.darkPlayer = players[0];
     this.lightPlayer = players[1];
     this.darkPlayer.yourTurn(this);
@@ -76,6 +84,43 @@ export class Chess {
     pieces.push(new Rook(squares[63], pieceColor, pieceShade));
 
     return pieces;
+  }
+
+  // loads board from saved state
+  private loadBoardState(pieces: ChessPieceDto[]): void {
+    const getBoardIndex = (x, y) => {
+      return x + (y * 8);
+    };
+    const squares = this.chessBoard.getSquares();
+    this.chessPieces = pieces.map(piece => {
+      const square = squares[getBoardIndex(piece.location.boardX, piece.location.boardY)];
+      return this.getPieceFromDto(square, piece);
+    });
+  }
+
+  private getPieceFromDto(square: ChessBoardSquare, chessPieceDto: ChessPieceDto): ChessPiece {
+    let piece: ChessPiece;
+    switch(chessPieceDto.type) {
+      case ChessPieceEnum.BISHOP:
+        piece = new Bishop(square, chessPieceDto.color, chessPieceDto.shade);
+        break;
+      case ChessPieceEnum.PAWN:
+        piece = new Pawn(square, chessPieceDto.color, chessPieceDto.shade);
+        break;
+      case ChessPieceEnum.ROOK:
+        piece = new Rook(square, chessPieceDto.color, chessPieceDto.shade);
+        break;
+      case ChessPieceEnum.KNIGHT:
+        piece = new Knight(square, chessPieceDto.color, chessPieceDto.shade);
+        break;
+      case ChessPieceEnum.QUEEN:
+        piece = new Queen(square, chessPieceDto.color, chessPieceDto.shade);
+        break;
+      case ChessPieceEnum.KING:
+        piece = new King(square, chessPieceDto.color, chessPieceDto.shade);
+        break;
+    }
+    return piece;
   }
 
   public resize(canvasWidth: number, canvasHeight: number) {
@@ -194,6 +239,16 @@ export class Chess {
     });
   }
 
+  public getBoardSquareFromDto(location: ChessLocationDto): ChessBoardSquare {
+    for (const square of this.chessBoard.getSquares()) {
+      if (square.getBoardX() === location.boardX && square.getBoardY() === location.boardY) {
+        return square;
+      }
+    }
+
+    return null;
+  }
+
   public isMoveLegal(move: ChessMove): boolean {
     const sourceSquare = move.movingPiece.getBoardSquare();
     move.movingPiece.setBoardSquare(move.destinationSquare);
@@ -246,6 +301,22 @@ export class Chess {
 
   public getChessPieces(): ChessPiece[] {
     return this.chessPieces;
+  }
+
+  public getChessPiecesAsDto(): ChessPieceDto[] {
+    const pieces: ChessPieceDto[] = [];
+    this.chessPieces.forEach(piece => {
+      pieces.push({
+        location: {
+          boardX: piece.getBoardSquare().getBoardX(),
+          boardY: piece.getBoardSquare().getBoardY()
+        },
+        color: piece.getColor(),
+        shade: piece.getShade(),
+        type: piece.getType()
+      });
+    });
+    return pieces;
   }
 
   public getGameOverHook(): EventEmitter<string> {

@@ -98,7 +98,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
           currentGameState: JSON.stringify(checkersGameState)
         };
 
-        this.checkersService.updateGame(game);
+        this.checkersService.updateGame(game).subscribe();
         this.board.pauseWhileMakingMove = false;
         this.pollTimer = window.setInterval(() => { this.pollData(); }, 500);
       });

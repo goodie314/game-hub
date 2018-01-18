@@ -5,8 +5,10 @@ import {Color} from "../../../util/enums/color";
 import {Shade} from "../../../util/enums/shade";
 import {Chess} from "../../../util/types/chess/chess";
 import {ChessMove} from "../../../util/types/chess/chess-move";
+import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
 
 export class Knight extends ChessPiece {
+  protected type = ChessPieceEnum.KNIGHT;
 
   constructor(boardSquare: ChessBoardSquare, color: Color, shade: Shade) {
     super(boardSquare, color, shade);

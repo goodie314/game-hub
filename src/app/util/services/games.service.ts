@@ -14,8 +14,8 @@ export class GamesService {
     return this.http.get<Game>(`${environment.gameHubServiceUrl}/game/${gameId}`, {headers: this.headers()});
   }
 
-  public updateGame(game: Game): void {
-    this.http.post(`${environment.gameHubServiceUrl}/game/update`, game).subscribe();
+  public updateGame(game: Game): Observable<any> {
+    return this.http.post<any>(`${environment.gameHubServiceUrl}/game/update`, game);
   }
 
   private headers(): HttpHeaders {
