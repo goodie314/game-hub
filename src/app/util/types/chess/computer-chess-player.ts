@@ -16,20 +16,12 @@ export class ComputerChessPlayer extends ChessPlayer {
   }
 
   private calculateMove(): ChessMove {
-    const myPieces = this.chess.getChessPieces().filter(piece => {
-      return piece.getShade() === this.shade;
-    });
-
-    const moves: ChessMove[] = [];
-    myPieces.forEach(piece => {
-      moves.push(...piece.getPotentialMoves(this.chess));
-    });
-    for (const move of moves) {
+    for (const move of this.potentialMoves) {
       if (move.capturedPiece) {
         return move;
       }
     }
 
-    return moves[Math.floor(Math.random() * moves.length)];
+    return this.potentialMoves[Math.floor(Math.random() * this.potentialMoves.length)];
   }
 }

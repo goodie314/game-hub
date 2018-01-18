@@ -8,6 +8,7 @@ export class ChessPlayer {
   protected myTurn = false;
   protected shade: Shade;
   protected chess: Chess;
+  protected potentialMoves: ChessMove[] = [];
 
   constructor(shade: Shade) {
     this.shade = shade;
@@ -19,6 +20,28 @@ export class ChessPlayer {
   public yourTurn(chess: Chess): void {
     this.chess = chess;
     this.myTurn = true;
+    const myPieces = this.chess.getChessPieces().filter(piece => {
+      return piece.getShade() === this.shade;
+    });
+
+    myPieces.forEach(piece => {
+      this.potentialMoves.push(...piece.getPotentialMoves(this.chess));
+    });
+    if (!this.potentialMoves.length) {
+      this.chess.gameOver('Stalemate');
+      return;
+    }
+
+    this.potentialMoves = this.potentialMoves.filter(move => {
+      return this.chess.isMoveLegal(move);
+    });
+    if (!this.potentialMoves.length) {
+      if (this.shade === Shade.DARK) {
+        this.chess.gameOver('Light Wins');
+      } else {
+        this.chess.gameOver('Dark Wins');
+      }
+    }
   }
 
   public takeTurn(move: ChessMove): void {
@@ -26,6 +49,7 @@ export class ChessPlayer {
       this.chess.removePieceFromBoard(move.capturedPiece);
     }
     this.chess.movePieceToSquare(move.movingPiece, move.destinationSquare);
+    this.potentialMoves = [];
     this.myTurn = false;
   }
 }

@@ -12,6 +12,7 @@ export class ChessPiece {
   protected boardSquare: ChessBoardSquare;
   protected color: Color;
   protected shade: Shade;
+  protected value: number;
 
   private velocity: Vec2;
   private speed = .05;
@@ -25,6 +26,9 @@ export class ChessPiece {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
+    if (!this.location || !this.boardSquare) {
+      return;
+    }
     if (this.velocity) {
       this.location = this.location.add(this.velocity);
       if (this.boardSquare.getMiddlePosition().close(this.location)) {
@@ -48,14 +52,18 @@ export class ChessPiece {
   }
 
   public removeFromBoard(): void {
-    this.boardSquare = new ChessBoardSquare(-1, -1, new Vec2(0, 0), 0, Color.BLACK);
-    this.location = new Vec2(0, 0);
-    // this.location = null;
-    // this.boardSquare = null;
+    // this.boardSquare = new ChessBoardSquare(-1, -1, new Vec2(0, 0), 0, Color.BLACK);
+    // this.location = new Vec2(0, 0);
+    this.location = null;
+    this.boardSquare = null;
   }
 
   public getBoardSquare(): ChessBoardSquare {
     return this.boardSquare;
+  }
+
+  public setBoardSquare(boardSquare: ChessBoardSquare): void {
+    this.boardSquare = boardSquare;
   }
 
   public getShade(): Shade {
@@ -64,6 +72,10 @@ export class ChessPiece {
 
   public getPotentialMoves(chess: Chess): ChessMove[] {
     return [];
+  }
+
+  public getValue(): number {
+    return this.value;
   }
 
   public equals(piece: ChessPiece): boolean {

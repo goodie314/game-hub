@@ -10,10 +10,14 @@ export class King extends ChessPiece {
 
   constructor(boardSquare: ChessBoardSquare, color: Color, shade: Shade) {
     super(boardSquare, color, shade);
+    this.value = 99;
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
     super.draw(ctx);
+    if (!this.location || !this.boardSquare) {
+      return;
+    }
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
@@ -36,9 +40,9 @@ export class King extends ChessPiece {
       BoardDirection.LEFT,
       BoardDirection.FORWARD_LEFT
     ];
-    let piece = null;
-    let square = null;
-    let move = null;
+    let piece;
+    let square;
+    let move;
 
     for (const direction of possibleDirections) {
       square = chess.getSquare(this, direction, 1);

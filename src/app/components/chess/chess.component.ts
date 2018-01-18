@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {ChessService} from "./chess.service";
 import {Chess} from "../../util/types/chess/chess";
 import {LocalChessPlayer} from "../../util/types/chess/local-chess-player";
@@ -8,6 +8,10 @@ import {VS} from "../../util/enums/vs";
 import {Vec2} from "../../util/types/vec2";
 import {Shade} from "../../util/enums/shade";
 import {ComputerChessPlayer} from "../../util/types/chess/computer-chess-player";
+import {ActivatedRoute, Router} from "@angular/router";
+import {SignonService} from "../signon/signon.service";
+import {User} from "../../util/types/user";
+import {MessageService} from "../message/message.service";
 
 @Component({
   selector: 'chess',
@@ -16,31 +20,44 @@ import {ComputerChessPlayer} from "../../util/types/chess/computer-chess-player"
 })
 
 export class ChessComponent implements OnInit {
-  private chess: Chess;
   @ViewChild('confirm')
-  confirm: ConfirmComponent;
+  private confirm: ConfirmComponent;
   @ViewChild('canvas')
-  canvas: ElementRef;
-  ctx: CanvasRenderingContext2D;
-  gameOverMessage: string;
-  gameId: number;
+  private canvas: ElementRef;
+  private ctx: CanvasRenderingContext2D;
 
-  startMenu = false;
-  startDisabled = false;
-  availableMatchTypes = [
+  private chess: Chess;
+  private gameId: number;
+
+  private user: User;
+
+  // Start menu items
+  private startMenu = true;
+  private availableMatchTypes = [
     VS.COMPUTER,
-    VS.PLAYER_LOCAL,
+    VS.PLAYER_LOCAL
   ];
-  selectedMatchType: VS = VS.COMPUTER;
+  private selectedMatchType: VS = VS.COMPUTER;
 
-  constructor(private chessService: ChessService) {
+  constructor(private chessService: ChessService,
+              private signonService: SignonService,
+              private messageService: MessageService,
+              private changeDetector: ChangeDetectorRef,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.startGame();
+    // this.startGame();
+    this.user = this.signonService.getSignedInUser();
+    if (this.user) {
+      this.availableMatchTypes.push(VS.ONLINE);
+    }
   }
 
   private startGame(): void {
+    this.startMenu = false;
+    this.changeDetector.detectChanges();
     const players: ChessPlayer[] = [new LocalChessPlayer(Shade.DARK)];
     switch (this.selectedMatchType) {
       case VS.COMPUTER:
@@ -51,6 +68,10 @@ export class ChessComponent implements OnInit {
         break;
     }
     this.chess = new Chess(this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight, players);
+    this.chess.getGameOverHook().subscribe((gameOverMessage) => {
+      this.messageService.success('Game Over', gameOverMessage, 1000 * 30);
+      this.startMenu = true;
+    });
     this.draw();
   }
 
@@ -65,11 +86,13 @@ export class ChessComponent implements OnInit {
   }
 
   private draw(): void {
-    this.resize();
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.chess.draw(this.ctx);
+    if (!this.startMenu) {
+      this.resize();
+      this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+      this.chess.draw(this.ctx);
 
-    requestAnimationFrame(() => { this.draw(); });
+      requestAnimationFrame(() => { this.draw(); });
+    }
   }
 
   private canvasClickHandler ($event): void {
@@ -80,5 +103,11 @@ export class ChessComponent implements OnInit {
     const x = ($event.clientX - rect.left) * scaleX;
     const y = ($event.clientY - rect.top) * scaleY;
     this.chess.clickHandler(new Vec2(x, y));
+  }
+
+  private gameTypeSelect(): void {
+    if (this.selectedMatchType === VS.ONLINE) {
+      this.router.navigate(['/', 'chess', 'lobby'], { relativeTo: this.route });
+    }
   }
 }

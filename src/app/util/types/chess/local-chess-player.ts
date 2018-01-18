@@ -1,8 +1,6 @@
 import {ChessPlayer} from "./chess-player";
-import {Vec2} from "../vec2";
 import {ChessBoardSquare} from "../../../drawable/chess/board/chess-board-square";
 import {ChessPiece} from "../../../drawable/chess/piece/chess-piece";
-import {Chess} from "./chess";
 import {Shade} from "../../enums/shade";
 import {ChessMove} from "./chess-move";
 
@@ -30,7 +28,9 @@ export class LocalChessPlayer extends ChessPlayer {
     }
 
     if (piece && piece.getShade() === this.shade) {
-      this.moves = piece.getPotentialMoves(this.chess);
+      this.moves = this.potentialMoves.filter(move => {
+        return piece.equals(move.movingPiece);
+      });
       this.highlightMoves(true);
     }
   }

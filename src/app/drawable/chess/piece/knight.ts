@@ -10,10 +10,14 @@ export class Knight extends ChessPiece {
 
   constructor(boardSquare: ChessBoardSquare, color: Color, shade: Shade) {
     super(boardSquare, color, shade);
+    this.value = 3;
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
     super.draw(ctx);
+    if (!this.location || !this.boardSquare) {
+      return;
+    }
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
@@ -26,9 +30,9 @@ export class Knight extends ChessPiece {
 
   public getPotentialMoves(chess: Chess): ChessMove[] {
     const moves: ChessMove[] = [];
+    let tempSquare;
     let piece = null;
     let square = null;
-    let tempSquare = null;
     let move = null;
 
     // Get forward knight moves

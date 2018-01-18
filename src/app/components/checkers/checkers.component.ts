@@ -95,7 +95,6 @@ export class CheckersComponent implements OnInit, OnDestroy {
         window.clearInterval(this.pollTimer);
         const game: Game = {
           gameId: this.gameId,
-          players: [],
           currentGameState: JSON.stringify(checkersGameState)
         };
 

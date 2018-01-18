@@ -1,17 +1,17 @@
 <div style="height: 100%">
-  <!--<div *ngIf="startMenu" class="col start-menu">-->
+  <div *ngIf="startMenu" class="col start-menu">
     <!--<div *ngIf="gameOverMessage">-->
       <!--<p>GAME OVER</p>-->
       <!--<p>FINAL SCORE: {{gameOverMessage}}</p>-->
     <!--</div>-->
-    <!--<div class="col type-selector">-->
-      <!--<p>Select Game Type: </p>-->
-      <!--<select [(ngModel)]="selectedMatchType" (change)="gameTypeSelect()">-->
-        <!--<option *ngFor="let type of availableMatchTypes">{{type}}</option>-->
-      <!--</select>-->
-    <!--</div>-->
-    <!--<button (click)="startGame()" [disabled]="startDisabled">START</button>-->
-  <!--</div>-->
-  <canvas #canvas (click)="canvasClickHandler($event)"></canvas>
+    <div class="col type-selector">
+      <p>Select Game Type: </p>
+      <select [(ngModel)]="selectedMatchType" (change)="gameTypeSelect()">
+        <option *ngFor="let type of availableMatchTypes">{{type}}</option>
+      </select>
+    </div>
+    <button (click)="startGame()">START</button>
+  </div>
+  <canvas #canvas *ngIf="!startMenu" (click)="canvasClickHandler($event)"></canvas>
 </div>
 <confirm #confirm></confirm>

@@ -12,15 +12,19 @@ import {Knight} from "../../../drawable/chess/piece/knight";
 import {Bishop} from "../../../drawable/chess/piece/bishop";
 import {Queen} from "../../../drawable/chess/piece/queen";
 import {King} from "../../../drawable/chess/piece/king";
+import {EventEmitter} from "@angular/core";
+import {ChessMove} from "./chess-move";
 export class Chess {
 
   private chessBoard: ChessBoard;
   private chessPieces: ChessPiece[];
-  private players: ChessPlayer[];
 
+  private players: ChessPlayer[];
   private darkTurn = true;
   private darkPlayer: ChessPlayer;
   private lightPlayer: ChessPlayer;
+
+  private gameOverHook: EventEmitter<string> = new EventEmitter();
 
   constructor(canvasWidth: number, canvasHeight: number, players: ChessPlayer[]) {
     this.players = players;
@@ -190,11 +194,44 @@ export class Chess {
     });
   }
 
+  public isMoveLegal(move: ChessMove): boolean {
+    const sourceSquare = move.movingPiece.getBoardSquare();
+    move.movingPiece.setBoardSquare(move.destinationSquare);
+
+    const opponentPieces = this.chessPieces.filter(piece => {
+      if (move.capturedPiece && piece.equals(move.capturedPiece)) {
+        return false;
+      }
+      return piece.getShade() !== move.movingPiece.getShade();
+    });
+
+    for (const piece of opponentPieces) {
+      const moves = piece.getPotentialMoves(this);
+      for (const m of moves) {
+        if (m.capturedPiece) {
+          if (m.capturedPiece.getValue() === 99 && m.capturedPiece.getShade() === move.movingPiece.getShade()) {
+            move.movingPiece.setBoardSquare(sourceSquare);
+            return false;
+          }
+        }
+      }
+    }
+    move.movingPiece.setBoardSquare(sourceSquare);
+    return true;
+  }
+
   public removePieceFromBoard(piece: ChessPiece): void {
     this.chessPieces = this.chessPieces.filter(p => {
       return !piece.equals(p);
     });
     piece.removeFromBoard();
+    if (piece.getValue() === 99) {
+      if (this.darkTurn) {
+        this.gameOver('Dark Wins');
+      } else {
+        this.gameOver('Light Wins');
+      }
+    }
   }
 
   public nextTurn(): void {
@@ -209,5 +246,13 @@ export class Chess {
 
   public getChessPieces(): ChessPiece[] {
     return this.chessPieces;
+  }
+
+  public getGameOverHook(): EventEmitter<string> {
+    return this.gameOverHook;
+  }
+
+  public gameOver(message: string) {
+    this.gameOverHook.emit(message);
   }
 }
