@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
-import {Game} from "../../util/types/game";
 import {Observable} from "rxjs/Observable";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
+import {Game} from "../types/game";
 
 @Injectable()
-export class CheckersService {
+export class GamesService {
 
   constructor(private http: HttpClient) {
   }

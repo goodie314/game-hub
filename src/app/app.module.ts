@@ -13,6 +13,7 @@ import {MessageModule} from "./components/message/message.module";
 import {LobbyModule} from "./components/lobby/lobby.module";
 import {GameRequestsModule} from "./components/game-requests/game-requests.module";
 import {ChessModule} from "./components/chess/chess.module";
+import {GamesService} from "./util/services/games.service";
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import {ChessModule} from "./components/chess/chess.module";
     SignonModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [GamesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

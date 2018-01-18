@@ -1,5 +1,4 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
-import {ChessService} from "./chess.service";
 import {Chess} from "../../util/types/chess/chess";
 import {LocalChessPlayer} from "../../util/types/chess/local-chess-player";
 import {ChessPlayer} from "../../util/types/chess/chess-player";
@@ -12,6 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SignonService} from "../signon/signon.service";
 import {User} from "../../util/types/user";
 import {MessageService} from "../message/message.service";
+import {GamesService} from "../../util/services/games.service";
 
 @Component({
   selector: 'chess',
@@ -39,7 +39,7 @@ export class ChessComponent implements OnInit {
   ];
   private selectedMatchType: VS = VS.COMPUTER;
 
-  constructor(private chessService: ChessService,
+  constructor(private gamesService: GamesService,
               private signonService: SignonService,
               private messageService: MessageService,
               private changeDetector: ChangeDetectorRef,
@@ -48,10 +48,15 @@ export class ChessComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.startGame();
+    this.route.params.subscribe(params => {
+      this.gameId = params['gameId'];
+    });
     this.user = this.signonService.getSignedInUser();
     if (this.user) {
       this.availableMatchTypes.push(VS.ONLINE);
+    }
+    if (this.gameId) {
+      this.startOnlineGame(this.gameId);
     }
   }
 
@@ -73,6 +78,12 @@ export class ChessComponent implements OnInit {
       this.startMenu = true;
     });
     this.draw();
+  }
+
+  private startOnlineGame(gameId) {
+    this.startMenu = false;
+    this.changeDetector.detectChanges();
+
   }
 
   private resize(): void {

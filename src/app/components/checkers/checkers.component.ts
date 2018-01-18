@@ -5,13 +5,13 @@ import {VS} from "../../util/enums/vs";
 import {ConfirmComponent} from "../confirm/confirm.component";
 import {ExitButton} from "../../drawable/checkers/exit-button";
 import {ActivatedRoute, Router} from "@angular/router";
-import {CheckersService} from "./checkers.service";
 import {SignonService} from "../signon/signon.service";
 import {User} from "../../util/types/user";
 import {Shade} from "../../util/enums/shade";
 import {Game} from "../../util/types/game";
 import {PotentialMove} from "../../util/types/checkers/potential-move";
 import {CheckersGameState} from "../../util/types/checkers/checkers-game-state";
+import {GamesService} from "../../util/services/games.service";
 
 @Component({
   selector: 'checkers',
@@ -45,7 +45,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
   constructor(private changeDetector: ChangeDetectorRef,
               private router: Router,
               private route: ActivatedRoute,
-              private checkersService: CheckersService,
+              private checkersService: GamesService,
               private signonService: SignonService) {}
 
   ngOnInit(): void {
