@@ -45,10 +45,12 @@ export class ChessPlayer {
   }
 
   public takeTurn(move: ChessMove): void {
-    if (move.capturedPiece) {
-      this.chess.removePieceFromBoard(move.capturedPiece);
+    if (move) {
+      if (move.capturedPiece) {
+        this.chess.removePieceFromBoard(move.capturedPiece);
+      }
+      this.chess.movePieceToSquare(move.movingPiece, move.destinationSquare);
     }
-    this.chess.movePieceToSquare(move.movingPiece, move.destinationSquare);
     this.potentialMoves = [];
     this.myTurn = false;
   }

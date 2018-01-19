@@ -12,7 +12,9 @@ export class ComputerChessPlayer extends ChessPlayer {
   public yourTurn(chess: Chess) {
     super.yourTurn(chess);
     const move = this.calculateMove();
-    this.takeTurn(move);
+    window.setTimeout(() => {
+      this.takeTurn(move);
+    }, 100);
   }
 
   private calculateMove(): ChessMove {
