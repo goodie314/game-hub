@@ -6,6 +6,7 @@ import {Shade} from "../../../util/enums/shade";
 import {Chess} from "../../../util/types/chess/chess";
 import {ChessMove} from "../../../util/types/chess/chess-move";
 import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
+import {Vec2} from "../../../util/types/vec2";
 
 export class Knight extends ChessPiece {
   protected type = ChessPieceEnum.KNIGHT;
@@ -16,18 +17,35 @@ export class Knight extends ChessPiece {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    super.draw(ctx);
     if (!this.location || !this.boardSquare) {
       return;
     }
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill();
-    ctx.strokeStyle = Color.RED;
-    ctx.strokeText('KN', this.location.x, this.location.y);
-    ctx.closePath();
+
+    super.draw(ctx);
+
+    let mirror = 1;
+    if (this.boardSquare.getBoardX() > 3) {
+      mirror = -1;
+    }
+    this.pieceDimension = 150;
+    this.linePoints = [
+      new Vec2(-50 * mirror, 40),
+      new Vec2(0, -50),
+      new Vec2(0, -40),
+      new Vec2(20 * mirror, -40),
+      new Vec2(50 * mirror, 0),
+      new Vec2(10 * mirror, 0),
+      new Vec2(50 * mirror, 40),
+      new Vec2(40 * mirror, 40),
+      new Vec2(40 * mirror, 50),
+      new Vec2(-40 * mirror, 50),
+      new Vec2(-40 * mirror, 40),
+      new Vec2(-50 * mirror, 40)
+    ];
+    this.curvePoints = [];
+    ctx.lineWidth = 5;
+    this.drawPoints(ctx);
+    ctx.lineWidth = 1;
   }
 
   public getPotentialMoves(chess: Chess): ChessMove[] {

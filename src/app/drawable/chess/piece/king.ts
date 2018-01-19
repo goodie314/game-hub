@@ -6,6 +6,7 @@ import {Chess} from "../../../util/types/chess/chess";
 import {ChessMove} from "../../../util/types/chess/chess-move";
 import {BoardDirection} from "../../../util/enums/board-direction";
 import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
+import {Vec2} from "../../../util/types/vec2";
 
 export class King extends ChessPiece {
   protected type = ChessPieceEnum.KING;
@@ -16,18 +17,38 @@ export class King extends ChessPiece {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    super.draw(ctx);
     if (!this.location || !this.boardSquare) {
       return;
     }
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill();
-    ctx.strokeStyle = Color.RED;
-    ctx.strokeText('K', this.location.x, this.location.y);
-    ctx.closePath();
+
+    super.draw(ctx);
+
+    this.pieceDimension = 125;
+    this.linePoints = [
+      // bottom left corner
+      new Vec2(-20, 60),
+      new Vec2(-30, 50),
+      new Vec2(-20, -20),
+      // bottom left corner of cross
+      new Vec2(-10, -20),
+      new Vec2(-10, -30),
+      new Vec2(-25, -30),
+      new Vec2(-25, -40),
+      new Vec2(-10, -40),
+      new Vec2(-10, -50),
+      new Vec2(10, -50),
+      new Vec2(10, -40),
+      new Vec2(25, -40),
+      new Vec2(25, -30),
+      new Vec2(10, -30),
+      new Vec2(10, -20),
+      new Vec2(20, -20),
+      new Vec2(30, 50),
+      new Vec2(20, 60),
+      new Vec2(-20, 60)
+    ];
+    this.curvePoints = [];
+    this.drawPoints(ctx);
   }
 
   public getPotentialMoves(chess: Chess): ChessMove[] {

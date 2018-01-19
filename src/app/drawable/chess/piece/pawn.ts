@@ -17,6 +17,10 @@ export class Pawn extends ChessPiece {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
+    if (!this.location || !this.boardSquare) {
+      return;
+    }
+
     super.draw(ctx);
     if (!this.location || !this.boardSquare) {
       return;
@@ -63,11 +67,15 @@ export class Pawn extends ChessPiece {
     // check if pawn is in start position in which case it can move 2 spaces forward
     if ((this.shade === Shade.DARK && this.boardSquare.getBoardY() === 6)
       || (this.shade === Shade.LIGHT && this.boardSquare.getBoardY() === 1)) {
-      square = chess.getSquare(this, BoardDirection.FORWARD, 2);
+      square = chess.getSquare(this, BoardDirection.FORWARD, 1);
       piece = chess.getPieceOnSquare(square);
-      move = this.getMoveToSquare(square, piece);
-      if (move && !move.capturedPiece) {
-        moves.push(move);
+      if (!piece) {
+        square = chess.getSquare(this, BoardDirection.FORWARD, 2);
+        piece = chess.getPieceOnSquare(square);
+        move = this.getMoveToSquare(square, piece);
+        if (move && !move.capturedPiece) {
+          moves.push(move);
+        }
       }
     }
 

@@ -6,6 +6,7 @@ import {Chess} from "../../../util/types/chess/chess";
 import {ChessMove} from "../../../util/types/chess/chess-move";
 import {BoardDirection} from "../../../util/enums/board-direction";
 import {ChessPieceEnum} from "../../../util/enums/chess-pieces-enum";
+import {Vec2} from "../../../util/types/vec2";
 
 export class Queen extends ChessPiece {
   protected type = ChessPieceEnum.QUEEN;
@@ -16,18 +17,48 @@ export class Queen extends ChessPiece {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    super.draw(ctx);
     if (!this.location || !this.boardSquare) {
       return;
     }
+
+    super.draw(ctx);
+
+    ctx.lineWidth = 5;
+    this.pieceDimension = 150;
+    this.linePoints = [
+      new Vec2(-20, 60),
+      new Vec2(-30, 50),
+      new Vec2(-10, -40),
+      new Vec2(0, -30),
+      new Vec2(10, -40),
+      new Vec2(30, 50),
+      new Vec2(20, 60),
+      new Vec2(-20, 60)
+    ];
+    this.curvePoints = [];
+    this.drawPoints(ctx);
+
+    const scaleFactor = this.boardSquare.getSquareDimension() / this.pieceDimension;
     ctx.fillStyle = this.color;
+    if (this.color === Color.WHITE) {
+      ctx.strokeStyle = Color.BLACK;
+    } else {
+      ctx.strokeStyle = Color.WHITE;
+    }
     ctx.beginPath();
-    ctx.arc(this.location.x, this.location.y, this.boardSquare.getSquareDimension() / 2, 0, 2 * Math.PI);
+    ctx.save();
+    ctx.translate(this.location.x, this.location.y);
+    ctx.scale(scaleFactor, scaleFactor);
+    if (this.shade === Shade.LIGHT) {
+      ctx.rotate(Math.PI);
+    }
+    ctx.lineWidth = 5;
+    ctx.arc(0, -50, 10, 0, 2 * Math.PI);
     ctx.stroke();
     ctx.fill();
-    ctx.strokeStyle = Color.RED;
-    ctx.strokeText('Q', this.location.x, this.location.y);
+    ctx.restore();
     ctx.closePath();
+    ctx.lineWidth = 1;
   }
 
   public getPotentialMoves(chess: Chess): ChessMove[] {

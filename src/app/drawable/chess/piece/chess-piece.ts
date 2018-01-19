@@ -114,7 +114,7 @@ export class ChessPiece {
     }
   }
 
-  protected drawPoints(ctx: CanvasRenderingContext2D, outline = true) {
+  protected drawPoints(ctx: CanvasRenderingContext2D, stroke = true, fill = true) {
     const scaleFactor = this.boardSquare.getSquareDimension() / this.pieceDimension;
     ctx.fillStyle = this.color;
     if (this.color === Color.WHITE) {
@@ -144,11 +144,11 @@ export class ChessPiece {
         ctx.quadraticCurveTo(this.curvePoints[i + 1].x, this.curvePoints[i + 1].y, this.curvePoints[i + 2].x, this.curvePoints[i + 2].y);
       }
     }
-    if (outline) {
+    if (fill) {
       ctx.fill();
+    }
+    if (stroke) {
       ctx.stroke();
-    } else {
-      ctx.fill();
     }
     ctx.closePath();
     ctx.restore();

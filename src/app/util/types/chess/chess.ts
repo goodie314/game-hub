@@ -161,7 +161,9 @@ export class Chess {
         }
       }
     }
-    this.players.forEach(player => { player.clickHandler(square, piece); });
+    if (square) {
+      this.players.forEach(player => { player.clickHandler(square, piece); });
+    }
   }
 
   // returns a board square a certain number of hops away from the piece given
