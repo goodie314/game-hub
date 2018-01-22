@@ -41,6 +41,8 @@ export class ChessComponent implements OnInit {
   ];
   private selectedMatchType: VS = VS.COMPUTER;
 
+  private mouseDown = false;
+
   constructor(private gamesService: GamesService,
               private signonService: SignonService,
               private messageService: MessageService,
@@ -148,5 +150,27 @@ export class ChessComponent implements OnInit {
     if (this.selectedMatchType === VS.ONLINE) {
       this.router.navigate(['/', 'chess', 'lobby'], { relativeTo: this.route });
     }
+  }
+
+  private canvasMouseDown ($event): void {
+    this.mouseDown = true;
+    this.canvasClickHandler($event);
+  }
+
+  private canvasMouseMove ($event): void {
+    if (this.mouseDown) {
+      const rect = this.canvas.nativeElement.getBoundingClientRect(), // abs. size of element
+        scaleX = this.canvas.nativeElement.width / rect.width,    // relationship bitmap vs. element for X
+        scaleY = this.canvas.nativeElement.height / rect.height;  // relationship bitmap vs. element for Y
+
+      const x = ($event.clientX - rect.left) * scaleX;
+      const y = ($event.clientY - rect.top) * scaleY;
+      this.chess.dragHandler(new Vec2(x, y));
+    }
+  }
+
+  private canvasMouseUp ($event): void {
+    this.mouseDown = false;
+    this.canvasClickHandler($event);
   }
 }

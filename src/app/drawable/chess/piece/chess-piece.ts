@@ -90,6 +90,10 @@ export class ChessPiece {
     return this.type;
   }
 
+  public setLocation(location: Vec2) {
+    this.location = location;
+  }
+
   public equals(piece: ChessPiece): boolean {
     return this.location === piece.location;
   }

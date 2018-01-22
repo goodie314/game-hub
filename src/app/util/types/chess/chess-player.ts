@@ -3,6 +3,7 @@ import {ChessPiece} from "../../../drawable/chess/piece/chess-piece";
 import {Chess} from "./chess";
 import {Shade} from "../../enums/shade";
 import {ChessMove} from "./chess-move";
+import {Vec2} from "../vec2";
 
 export class ChessPlayer {
   protected myTurn = false;
@@ -15,6 +16,9 @@ export class ChessPlayer {
   }
 
   public clickHandler(square: ChessBoardSquare, piece?: ChessPiece): void {
+  }
+
+  public dragHandler(mouseLocation: Vec2): void {
   }
 
   public yourTurn(chess: Chess): void {

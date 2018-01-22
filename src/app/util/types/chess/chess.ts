@@ -166,6 +166,12 @@ export class Chess {
     }
   }
 
+  public dragHandler (mouseLocation: Vec2) {
+    this.players.forEach(player => {
+      player.dragHandler(mouseLocation);
+    });
+  }
+
   // returns a board square a certain number of hops away from the piece given
   public getSquare(piece: ChessPiece, direction: BoardDirection, numberOfHops: number, fromSquare?: ChessBoardSquare): ChessBoardSquare {
     const getSquareIndex = (x: number, y: number) => {

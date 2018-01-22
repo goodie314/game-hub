@@ -9,6 +9,7 @@
     </div>
     <button (click)="startGame()">START</button>
   </div>
-  <canvas #canvas *ngIf="!startMenu" (click)="canvasClickHandler($event)"></canvas>
+  <canvas #canvas *ngIf="!startMenu"
+          (mousedown)="canvasMouseDown($event)" (mousemove)="canvasMouseMove($event)" (mouseup)="canvasMouseUp($event)"></canvas>
 </div>
 <confirm #confirm></confirm>
