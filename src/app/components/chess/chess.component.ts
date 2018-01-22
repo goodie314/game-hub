@@ -67,6 +67,9 @@ export class ChessComponent implements OnInit {
   private startGame(): void {
     this.startMenu = false;
     this.changeDetector.detectChanges();
+    this.canvas.nativeElement.addEventListener('touchstart', this.canvasMouseDown.bind(this), false);
+    this.canvas.nativeElement.addEventListener('touchmove', this.canvasMouseMove.bind(this), false);
+    this.canvas.nativeElement.addEventListener('touchend', this.canvasMouseUp.bind(this), false);
     const players: ChessPlayer[] = [new LocalChessPlayer(Shade.DARK)];
     switch (this.selectedMatchType) {
       case VS.COMPUTER:
@@ -153,12 +156,20 @@ export class ChessComponent implements OnInit {
   }
 
   private canvasMouseDown ($event): void {
+    if ($event.touches && $event.touches.length) {
+      $event.clientX = $event.touches[0].clientX;
+      $event.clientY = $event.touches[0].clientY;
+    }
     this.mouseDown = true;
     this.canvasClickHandler($event);
   }
 
   private canvasMouseMove ($event): void {
     if (this.mouseDown) {
+      if ($event.touches && $event.touches.length) {
+        $event.clientX = $event.touches[0].clientX;
+        $event.clientY = $event.touches[0].clientY;
+      }
       const rect = this.canvas.nativeElement.getBoundingClientRect(), // abs. size of element
         scaleX = this.canvas.nativeElement.width / rect.width,    // relationship bitmap vs. element for X
         scaleY = this.canvas.nativeElement.height / rect.height;  // relationship bitmap vs. element for Y
@@ -170,6 +181,10 @@ export class ChessComponent implements OnInit {
   }
 
   private canvasMouseUp ($event): void {
+    if ($event.changedTouches && $event.changedTouches) {
+      $event.clientX = $event.changedTouches[0].clientX;
+      $event.clientY = $event.changedTouches[0].clientY;
+    }
     this.mouseDown = false;
     this.canvasClickHandler($event);
   }

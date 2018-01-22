@@ -34,10 +34,12 @@ export class LocalChessPlayer extends ChessPlayer {
     }
 
     if (piece && piece.getShade() === this.shade) {
-      this.selectedPiece = piece;
       this.moves = this.potentialMoves.filter(move => {
         return piece.equals(move.movingPiece);
       });
+      if (this.moves.length) {
+        this.selectedPiece = piece;
+      }
       this.highlightMoves(true);
     }
   }
