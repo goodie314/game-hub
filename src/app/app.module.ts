@@ -11,9 +11,9 @@ import {SignonModule} from "./components/signon/signon.module";
 import {HttpClientModule} from "@angular/common/http";
 import {MessageModule} from "./components/message/message.module";
 import {LobbyModule} from "./components/lobby/lobby.module";
-import {GameRequestsModule} from "./components/game-requests/game-requests.module";
 import {ChessModule} from "./components/chess/chess.module";
 import {GamesService} from "./util/services/games.service";
+import {PongModule} from "./components/pong/pong.module";
 
 
 @NgModule({
@@ -25,6 +25,7 @@ import {GamesService} from "./util/services/games.service";
     BrowserAnimationsModule,
     CheckersModule,
     ChessModule,
+    PongModule,
     HttpClientModule,
     LobbyModule,
     MessageModule,
