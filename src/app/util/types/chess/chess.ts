@@ -19,6 +19,8 @@ import {ChessPieceDto} from "./dto/chess-piece-dto";
 import {ChessGameState} from "./chess-game-state";
 import {ChessPieceEnum} from "../../enums/chess-pieces-enum";
 export class Chess {
+  private canvasWidth: number;
+  private canvasHeight: number;
 
   private chessBoard: ChessBoard;
   private chessPieces: ChessPiece[];
@@ -31,6 +33,8 @@ export class Chess {
   private gameOverHook: EventEmitter<string> = new EventEmitter();
 
   constructor(canvasWidth: number, canvasHeight: number, players: ChessPlayer[], saveState?: ChessGameState, darkTurn = true) {
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
     this.players = players;
     this.chessBoard = new ChessBoard(canvasWidth, canvasHeight);
     if (saveState && saveState.chessPieces) {
@@ -130,20 +134,44 @@ export class Chess {
   }
 
   public resize(canvasWidth: number, canvasHeight: number) {
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
     this.chessBoard.resize(canvasWidth, canvasHeight);
     this.chessPieces.forEach(piece => {
       piece.resize();
     });
   }
 
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw(ctx: CanvasRenderingContext2D, flip = false): void {
+    ctx.save();
+    if (flip) {
+      ctx.translate(this.canvasWidth / 2, this.canvasHeight / 2);
+      ctx.rotate(Math.PI);
+      ctx.translate(-this.canvasWidth / 2, -this.canvasHeight / 2);
+    }
     this.chessBoard.draw(ctx);
     this.chessPieces.forEach(piece => {
       piece.draw(ctx);
     });
+    ctx.restore();
   }
 
-  public clickHandler(clickLocation: Vec2) {
+  public clickHandler(clickLocation: Vec2, flip = false) {
+    if (flip) {
+      const mid = new Vec2(this.canvasWidth / 2, this.canvasHeight / 2);
+      const diffX = Math.abs(clickLocation.x - mid.x);
+      if (clickLocation.x < mid.x) {
+        clickLocation.x = mid.x + diffX;
+      } else {
+        clickLocation.x = mid.x - diffX;
+      }
+      const diffY = Math.abs(clickLocation.y - mid.y);
+      if (clickLocation.y < mid.y) {
+        clickLocation.y = mid.y + diffY;
+      } else {
+        clickLocation.y = mid.y - diffY;
+      }
+    }
     const squares: ChessBoardSquare[] = this.chessBoard.getSquares();
     let square: ChessBoardSquare = null;
     let piece: ChessPiece = null;

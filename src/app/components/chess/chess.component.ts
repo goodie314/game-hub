@@ -43,6 +43,8 @@ export class ChessComponent implements OnInit {
 
   private mouseDown = false;
 
+  private flip = false;
+
   constructor(private gamesService: GamesService,
               private signonService: SignonService,
               private messageService: MessageService,
@@ -94,6 +96,7 @@ export class ChessComponent implements OnInit {
     const userName = this.user.userName;
     this.gamesService.getGame(gameId).subscribe(game => {
       let darkTurn = true;
+      this.flip = game.players[1] === userName;
       if (game.currentGameState) {
         const state: ChessGameState = JSON.parse(game.currentGameState);
         if (state.lastPlayerToUpdate) {
@@ -133,7 +136,7 @@ export class ChessComponent implements OnInit {
     if (!this.startMenu) {
       this.resize();
       this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-      this.chess.draw(this.ctx);
+      this.chess.draw(this.ctx, this.flip);
 
       requestAnimationFrame(() => { this.draw(); });
     }
@@ -146,7 +149,7 @@ export class ChessComponent implements OnInit {
 
     const x = ($event.clientX - rect.left) * scaleX;
     const y = ($event.clientY - rect.top) * scaleY;
-    this.chess.clickHandler(new Vec2(x, y));
+    this.chess.clickHandler(new Vec2(x, y), this.flip);
   }
 
   private gameTypeSelect(): void {
