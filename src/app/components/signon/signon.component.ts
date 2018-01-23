@@ -1,10 +1,6 @@
-import {Component, EventEmitter, Output} from "@angular/core";
-import {GlobalData} from "../../util/types/global-data";
+import {Component} from "@angular/core";
 import {SignonService} from "./signon.service";
-import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
-import {AppComponent} from "../../app.component";
-import {User} from "../../util/types/user";
 import {MessageService} from "../message/message.service";
 
 @Component({

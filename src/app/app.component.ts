@@ -1,6 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {CheckersComponent} from "./components/checkers/checkers.component";
-import {GlobalData} from "./util/types/global-data";
+import {Component, OnInit} from '@angular/core';
 import {User} from "./util/types/user";
 import {SignonService} from "./components/signon/signon.service";
 
